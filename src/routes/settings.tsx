@@ -233,10 +233,15 @@ function ClassesTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean 
 
   const add = useMutation({
     mutationFn: async () => {
+      const streamClean = stream.trim().toUpperCase();
+      if (!streamClean) throw new Error("Stream is required");
       const { error } = await supabase.from("classes").insert({
-        school_id: schoolId, form: Number(form), stream, teacher_name: teacher || null,
+        school_id: schoolId, form: Number(form), stream: streamClean, teacher_name: teacher || null,
       });
-      if (error) throw error;
+      if (error) {
+        if (error.code === "23505") throw new Error(`Form ${form}${streamClean} already exists. Pick a different stream.`);
+        throw error;
+      }
     },
     onSuccess: () => { toast.success("Class added"); setTeacher(""); qc.invalidateQueries({ queryKey: ["classes-full"] }); qc.invalidateQueries({ queryKey: ["classes"] }); },
     onError: (e: any) => toast.error(e.message),
