@@ -9,8 +9,68 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StudentsRouteImport } from './routes/students'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as ReceiptingRouteImport } from './routes/receipting'
+import { Route as PromotionRouteImport } from './routes/promotion'
+import { Route as LedgerRouteImport } from './routes/ledger'
+import { Route as FundsRouteImport } from './routes/funds'
+import { Route as FeesRouteImport } from './routes/fees'
+import { Route as CashbookRouteImport } from './routes/cashbook'
+import { Route as BursaryRouteImport } from './routes/bursary'
 import { Route as IndexRouteImport } from './routes/index'
 
+const StudentsRoute = StudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReceiptingRoute = ReceiptingRouteImport.update({
+  id: '/receipting',
+  path: '/receipting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PromotionRoute = PromotionRouteImport.update({
+  id: '/promotion',
+  path: '/promotion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LedgerRoute = LedgerRouteImport.update({
+  id: '/ledger',
+  path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FundsRoute = FundsRouteImport.update({
+  id: '/funds',
+  path: '/funds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeesRoute = FeesRouteImport.update({
+  id: '/fees',
+  path: '/fees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CashbookRoute = CashbookRouteImport.update({
+  id: '/cashbook',
+  path: '/cashbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BursaryRoute = BursaryRouteImport.update({
+  id: '/bursary',
+  path: '/bursary',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +79,172 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bursary': typeof BursaryRoute
+  '/cashbook': typeof CashbookRoute
+  '/fees': typeof FeesRoute
+  '/funds': typeof FundsRoute
+  '/ledger': typeof LedgerRoute
+  '/promotion': typeof PromotionRoute
+  '/receipting': typeof ReceiptingRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/students': typeof StudentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bursary': typeof BursaryRoute
+  '/cashbook': typeof CashbookRoute
+  '/fees': typeof FeesRoute
+  '/funds': typeof FundsRoute
+  '/ledger': typeof LedgerRoute
+  '/promotion': typeof PromotionRoute
+  '/receipting': typeof ReceiptingRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/students': typeof StudentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bursary': typeof BursaryRoute
+  '/cashbook': typeof CashbookRoute
+  '/fees': typeof FeesRoute
+  '/funds': typeof FundsRoute
+  '/ledger': typeof LedgerRoute
+  '/promotion': typeof PromotionRoute
+  '/receipting': typeof ReceiptingRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/students': typeof StudentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bursary'
+    | '/cashbook'
+    | '/fees'
+    | '/funds'
+    | '/ledger'
+    | '/promotion'
+    | '/receipting'
+    | '/reports'
+    | '/settings'
+    | '/students'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/bursary'
+    | '/cashbook'
+    | '/fees'
+    | '/funds'
+    | '/ledger'
+    | '/promotion'
+    | '/receipting'
+    | '/reports'
+    | '/settings'
+    | '/students'
+  id:
+    | '__root__'
+    | '/'
+    | '/bursary'
+    | '/cashbook'
+    | '/fees'
+    | '/funds'
+    | '/ledger'
+    | '/promotion'
+    | '/receipting'
+    | '/reports'
+    | '/settings'
+    | '/students'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BursaryRoute: typeof BursaryRoute
+  CashbookRoute: typeof CashbookRoute
+  FeesRoute: typeof FeesRoute
+  FundsRoute: typeof FundsRoute
+  LedgerRoute: typeof LedgerRoute
+  PromotionRoute: typeof PromotionRoute
+  ReceiptingRoute: typeof ReceiptingRoute
+  ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
+  StudentsRoute: typeof StudentsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/students': {
+      id: '/students'
+      path: '/students'
+      fullPath: '/students'
+      preLoaderRoute: typeof StudentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/receipting': {
+      id: '/receipting'
+      path: '/receipting'
+      fullPath: '/receipting'
+      preLoaderRoute: typeof ReceiptingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/promotion': {
+      id: '/promotion'
+      path: '/promotion'
+      fullPath: '/promotion'
+      preLoaderRoute: typeof PromotionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ledger': {
+      id: '/ledger'
+      path: '/ledger'
+      fullPath: '/ledger'
+      preLoaderRoute: typeof LedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/funds': {
+      id: '/funds'
+      path: '/funds'
+      fullPath: '/funds'
+      preLoaderRoute: typeof FundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fees': {
+      id: '/fees'
+      path: '/fees'
+      fullPath: '/fees'
+      preLoaderRoute: typeof FeesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cashbook': {
+      id: '/cashbook'
+      path: '/cashbook'
+      fullPath: '/cashbook'
+      preLoaderRoute: typeof CashbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bursary': {
+      id: '/bursary'
+      path: '/bursary'
+      fullPath: '/bursary'
+      preLoaderRoute: typeof BursaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +257,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BursaryRoute: BursaryRoute,
+  CashbookRoute: CashbookRoute,
+  FeesRoute: FeesRoute,
+  FundsRoute: FundsRoute,
+  LedgerRoute: LedgerRoute,
+  PromotionRoute: PromotionRoute,
+  ReceiptingRoute: ReceiptingRoute,
+  ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
+  StudentsRoute: StudentsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

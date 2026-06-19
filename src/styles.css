@@ -4,20 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -59,18 +45,38 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* SomaFin treasury palette */
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-forest: var(--forest);
+  --color-forest-light: var(--forest-light);
+  --color-brass: var(--brass);
+  --color-brass-light: var(--brass-light);
+  --color-garnet: var(--garnet);
+  --color-garnet-light: var(--garnet-light);
+  --color-teal: var(--teal);
+  --color-teal-light: var(--teal-light);
+  --color-amber: var(--amber);
+  --color-amber-light: var(--amber-light);
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --background: #F6F4EE;
+  --foreground: #122019;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
+  --primary: #1E5B45;
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
@@ -79,8 +85,8 @@
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
+  --border: #E2DECF;
+  --input: #E2DECF;
   --ring: oklch(0.704 0.04 256.788);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -95,6 +101,24 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+
+  /* SomaFin tokens */
+  --ink: #122019;
+  --ink-soft: #3A4A41;
+  --paper: #F6F4EE;
+  --surface: #FFFFFF;
+  --line: #E2DECF;
+  --line-strong: #CFC8AE;
+  --forest: #1E5B45;
+  --forest-light: #E6EFE8;
+  --brass: #B8924F;
+  --brass-light: #F4EBD8;
+  --garnet: #9C3B3B;
+  --garnet-light: #F5E5E2;
+  --teal: #2D7A72;
+  --teal-light: #E3EFEC;
+  --amber: #B07A2C;
+  --amber-light: #F6ECD7;
 }
 
 .dark {
@@ -138,7 +162,82 @@
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, .serif {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* SomaFin signature components */
+@layer components {
+  .sf-stub-perf {
+    position: relative;
+    border-top: 1px dashed var(--line-strong);
+  }
+  .sf-stub-perf::before,
+  .sf-stub-perf::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+  }
+  .sf-stub-perf::before { left: -5px; }
+  .sf-stub-perf::after { right: -5px; }
+
+  .sf-seal {
+    position: relative;
+    border: 1.4px solid var(--brass);
+    border-radius: 9999px;
+  }
+  .sf-seal::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px dashed rgba(184,146,79,0.55);
+    border-radius: 9999px;
+  }
+
+  .sf-stamp {
+    position: relative;
+    border: 1.6px solid var(--brass);
+    border-radius: 9999px;
+    color: var(--brass);
+  }
+  .sf-stamp::before {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px dashed rgba(184,146,79,0.5);
+    border-radius: 9999px;
+  }
+}
+
+@media print {
+  .sf-no-print { display: none !important; }
+  .sf-print-area { padding: 0 !important; max-width: 100% !important; }
+}
+
+@keyframes sf-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+.sf-fade {
+  animation: sf-fade-in 0.25s ease;
+}
   }
 }
