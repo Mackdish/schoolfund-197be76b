@@ -18,7 +18,7 @@ const navItems = [
   { to: "/ledger", label: "General ledger", icon: BookOpen },
   { to: "/cashbook", label: "Cashbook", icon: BookText },
   { to: "/bank-rec", label: "Bank reconciliation", icon: Landmark },
-  { to: "/receipting", label: "Receipting · KCB", icon: Receipt },
+  { to: "/receipting", label: "Receipting", icon: Receipt },
   { to: "/promotion", label: "Promotion", icon: ArrowRight },
   { to: "/bursary", label: "Bursaries · capitation", icon: HandCoins },
   { to: "/reports", label: "Statutory reports", icon: FileBarChart },
