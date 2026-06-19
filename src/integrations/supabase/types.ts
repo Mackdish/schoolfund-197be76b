@@ -1230,6 +1230,10 @@ export type Database = {
         Args: { _school_id: string; _user_id: string }
         Returns: boolean
       }
+      ensure_chart_for_fund: {
+        Args: { _fund_code: string; _fund_id: string; _school_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1246,6 +1250,8 @@ export type Database = {
         Args: { _school_id: string; _user_id: string }
         Returns: boolean
       }
+      next_journal_no: { Args: { _school_id: string }; Returns: string }
+      post_payment: { Args: { _payment_id: string }; Returns: string }
     }
     Enums: {
       account_type: "asset" | "liability" | "equity" | "income" | "expense"
