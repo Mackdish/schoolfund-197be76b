@@ -454,10 +454,11 @@ function UsersTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean })
   });
 
   // Group by user
-  const grouped = new Map<string, { name: string; email: string; roles: { id: string; role: Role }[] }>();
+  type Grouped = { name: string; email: string; roles: { id: string; role: Role }[] };
+  const grouped = new Map<string, Grouped>();
   for (const r of rolesQ.data ?? []) {
-    const g = grouped.get(r.user_id) ?? { name: r.profiles?.full_name ?? "—", email: r.profiles?.email ?? "—", roles: [] };
-    g.roles.push({ id: r.id, role: r.role });
+    const g: Grouped = grouped.get(r.user_id) ?? { name: r.profiles?.full_name ?? "—", email: r.profiles?.email ?? "—", roles: [] };
+    g.roles.push({ id: r.id, role: r.role as Role });
     grouped.set(r.user_id, g);
   }
 
