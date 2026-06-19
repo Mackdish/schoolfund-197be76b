@@ -33,24 +33,20 @@ export function OnboardingWizard() {
     if (!user) return;
     setBusy(true);
     try {
-      const { data: school, error: e1 } = await supabase
-        .from("schools")
-        .insert({ name, county: county || null, code: code || null })
-        .select("id")
-        .single();
+      const { data: newSchoolId, error: e1 } = await supabase.rpc("create_school", {
+        _name: name,
+        _code: code || undefined,
+        _county: county || undefined,
+      });
       if (e1) throw e1;
+      const school = { id: newSchoolId as unknown as string };
 
-      // admin role for creator
+      // bursar role for creator (admin role is auto-granted by create_school)
       const { error: e2 } = await supabase
         .from("user_roles")
-        .insert([
-          { user_id: user.id, school_id: school.id, role: "admin" },
-          { user_id: user.id, school_id: school.id, role: "bursar" },
-        ]);
+        .insert([{ user_id: user.id, school_id: school.id, role: "bursar" }]);
       if (e2) throw e2;
 
-      // active school
-      await supabase.from("profiles").update({ active_school_id: school.id }).eq("id", user.id);
 
       // three statutory funds
       const { data: funds, error: e3 } = await supabase

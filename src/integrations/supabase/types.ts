@@ -1378,6 +1378,15 @@ export type Database = {
         Args: { _school_id: string; _user_id: string }
         Returns: boolean
       }
+      create_school: {
+        Args: {
+          _code?: string
+          _county?: string
+          _motto?: string
+          _name: string
+        }
+        Returns: string
+      }
       ensure_chart_for_fund: {
         Args: { _fund_code: string; _fund_id: string; _school_id: string }
         Returns: undefined
