@@ -19,6 +19,7 @@ import { Route as FundsRouteImport } from './routes/funds'
 import { Route as FeesRouteImport } from './routes/fees'
 import { Route as CashbookRouteImport } from './routes/cashbook'
 import { Route as BursaryRouteImport } from './routes/bursary'
+import { Route as BankRecRouteImport } from './routes/bank-rec'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -72,6 +73,11 @@ const BursaryRoute = BursaryRouteImport.update({
   path: '/bursary',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BankRecRoute = BankRecRouteImport.update({
+  id: '/bank-rec',
+  path: '/bank-rec',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -86,6 +92,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bank-rec': typeof BankRecRoute
   '/bursary': typeof BursaryRoute
   '/cashbook': typeof CashbookRoute
   '/fees': typeof FeesRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bank-rec': typeof BankRecRoute
   '/bursary': typeof BursaryRoute
   '/cashbook': typeof CashbookRoute
   '/fees': typeof FeesRoute
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bank-rec': typeof BankRecRoute
   '/bursary': typeof BursaryRoute
   '/cashbook': typeof CashbookRoute
   '/fees': typeof FeesRoute
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/bank-rec'
     | '/bursary'
     | '/cashbook'
     | '/fees'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/bank-rec'
     | '/bursary'
     | '/cashbook'
     | '/fees'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/bank-rec'
     | '/bursary'
     | '/cashbook'
     | '/fees'
@@ -174,6 +186,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  BankRecRoute: typeof BankRecRoute
   BursaryRoute: typeof BursaryRoute
   CashbookRoute: typeof CashbookRoute
   FeesRoute: typeof FeesRoute
@@ -258,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BursaryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bank-rec': {
+      id: '/bank-rec'
+      path: '/bank-rec'
+      fullPath: '/bank-rec'
+      preLoaderRoute: typeof BankRecRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -278,6 +298,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  BankRecRoute: BankRecRoute,
   BursaryRoute: BursaryRoute,
   CashbookRoute: CashbookRoute,
   FeesRoute: FeesRoute,
