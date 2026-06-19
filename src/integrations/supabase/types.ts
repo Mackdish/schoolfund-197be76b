@@ -173,6 +173,143 @@ export type Database = {
           },
         ]
       }
+      bank_statement_imports: {
+        Row: {
+          closing_balance: number | null
+          created_at: string | null
+          filename: string
+          fund_id: string
+          id: string
+          imported_by: string | null
+          line_count: number | null
+          opening_balance: number | null
+          school_id: string
+          statement_from: string | null
+          statement_to: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          closing_balance?: number | null
+          created_at?: string | null
+          filename: string
+          fund_id: string
+          id?: string
+          imported_by?: string | null
+          line_count?: number | null
+          opening_balance?: number | null
+          school_id: string
+          statement_from?: string | null
+          statement_to?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          closing_balance?: number | null
+          created_at?: string | null
+          filename?: string
+          fund_id?: string
+          id?: string
+          imported_by?: string | null
+          line_count?: number | null
+          opening_balance?: number | null
+          school_id?: string
+          statement_from?: string | null
+          statement_to?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_statement_imports_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "funds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bank_statement_imports_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bank_statement_lines: {
+        Row: {
+          created_at: string | null
+          credit: number
+          debit: number
+          description: string | null
+          fund_id: string
+          id: string
+          import_id: string
+          matched_cashbook_id: string | null
+          reference: string | null
+          running_balance: number | null
+          school_id: string
+          status: string
+          txn_date: string
+        }
+        Insert: {
+          created_at?: string | null
+          credit?: number
+          debit?: number
+          description?: string | null
+          fund_id: string
+          id?: string
+          import_id: string
+          matched_cashbook_id?: string | null
+          reference?: string | null
+          running_balance?: number | null
+          school_id: string
+          status?: string
+          txn_date: string
+        }
+        Update: {
+          created_at?: string | null
+          credit?: number
+          debit?: number
+          description?: string | null
+          fund_id?: string
+          id?: string
+          import_id?: string
+          matched_cashbook_id?: string | null
+          reference?: string | null
+          running_balance?: number | null
+          school_id?: string
+          status?: string
+          txn_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_statement_lines_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "funds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bank_statement_lines_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "bank_statement_imports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bank_statement_lines_matched_cashbook_id_fkey"
+            columns: ["matched_cashbook_id"]
+            isOneToOne: false
+            referencedRelation: "cashbook_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bank_statement_lines_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bursaries: {
         Row: {
           amount: number
@@ -284,6 +421,7 @@ export type Database = {
       }
       cashbook_entries: {
         Row: {
+          bank_statement_line_id: string | null
           created_at: string
           description: string
           entry_date: string
@@ -300,6 +438,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          bank_statement_line_id?: string | null
           created_at?: string
           description: string
           entry_date?: string
@@ -316,6 +455,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          bank_statement_line_id?: string | null
           created_at?: string
           description?: string
           entry_date?: string
@@ -332,6 +472,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "cashbook_entries_bank_statement_line_id_fkey"
+            columns: ["bank_statement_line_id"]
+            isOneToOne: false
+            referencedRelation: "bank_statement_lines"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "cashbook_entries_fund_id_fkey"
             columns: ["fund_id"]
@@ -1226,6 +1373,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auto_match_bank_import: { Args: { _import_id: string }; Returns: number }
       can_write_money: {
         Args: { _school_id: string; _user_id: string }
         Returns: boolean
@@ -1252,6 +1400,11 @@ export type Database = {
       }
       next_journal_no: { Args: { _school_id: string }; Returns: string }
       post_payment: { Args: { _payment_id: string }; Returns: string }
+      run_promotion: {
+        Args: { _from_term_id: string; _school_id: string; _to_term_id: string }
+        Returns: Json
+      }
+      unmatch_bank_line: { Args: { _line_id: string }; Returns: undefined }
     }
     Enums: {
       account_type: "asset" | "liability" | "equity" | "income" | "expense"
