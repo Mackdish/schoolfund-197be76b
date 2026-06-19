@@ -82,11 +82,74 @@ function ReportsPage() {
   const ie = useMemo(() => aggregateByAccount(linesQ.data ?? []), [linesQ.data]);
   const itd = useMemo(() => aggregateByAccount(itdQ.data ?? []), [itdQ.data]);
 
+  // Cashbook summary per fund (period)
+  const cbQ = useQuery({
+    queryKey: ["report-cb", schoolId, from, to, fundId],
+    queryFn: async () => {
+      let q = supabase
+        .from("cashbook_entries")
+        .select("fund_id, entry_date, receipts, payments")
+        .eq("school_id", schoolId);
+      if (fundId) q = q.eq("fund_id", fundId);
+      const { data } = await q.limit(20000);
+      return (data ?? []) as any[];
+    },
+  });
+
+  const cashbookSummary = useMemo(() => {
+    const funds = (fundsQ.data ?? []).filter((f) => !fundId || f.id === fundId);
+    const all = cbQ.data ?? [];
+    return funds.map((f) => {
+      const open = Number(f.opening_balance ?? 0);
+      let priorNet = 0,
+        pReceipts = 0,
+        pPayments = 0;
+      for (const e of all) {
+        if (e.fund_id !== f.id) continue;
+        const r = Number(e.receipts ?? 0);
+        const p = Number(e.payments ?? 0);
+        if (e.entry_date < from) priorNet += r - p;
+        else if (e.entry_date <= to) {
+          pReceipts += r;
+          pPayments += p;
+        }
+      }
+      const opening = open + priorNet;
+      return {
+        id: f.id,
+        code: f.code,
+        name: f.name,
+        opening,
+        receipts: pReceipts,
+        payments: pPayments,
+        closing: opening + pReceipts - pPayments,
+      };
+    });
+  }, [cbQ.data, fundsQ.data, fundId, from, to]);
+
   const incomeRows = ie.filter((r) => r.type === "income");
   const expenseRows = ie.filter((r) => r.type === "expense");
   const totalIncome = sum(incomeRows.map((r) => r.credit - r.debit));
   const totalExpense = sum(expenseRows.map((r) => r.debit - r.credit));
   const surplus = totalIncome - totalExpense;
+
+  // Trial balance (as-at `to`)
+  const tbRows = useMemo(() => {
+    return itd.map((r) => {
+      const net = r.debit - r.credit;
+      const isDr = r.type === "asset" || r.type === "expense";
+      const bal = isDr ? net : -net;
+      return {
+        code: r.code,
+        name: r.name,
+        type: r.type,
+        debit: bal > 0 ? bal : 0,
+        credit: bal < 0 ? -bal : 0,
+      };
+    });
+  }, [itd]);
+  const tbDebit = sum(tbRows.map((r) => r.debit));
+  const tbCredit = sum(tbRows.map((r) => r.credit));
 
   const assets = itd
     .filter((r) => r.type === "asset")
