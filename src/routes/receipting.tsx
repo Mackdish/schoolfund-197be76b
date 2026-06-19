@@ -8,7 +8,7 @@ import { useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { kes } from "@/lib/money";
-import { Check, Receipt } from "lucide-react";
+import { Check, Receipt, Download, Printer } from "lucide-react";
 
 export const Route = createFileRoute("/receipting")({
   head: () => ({ meta: [{ title: "Receipting — SomaFin" }] }),
@@ -257,6 +257,7 @@ function ReceiptingPage() {
                   <th className="px-2 text-left">Fund</th>
                   <th className="px-2 text-right font-mono">Amount</th>
                   <th className="px-2">Status</th>
+                  <th className="px-2"></th>
                 </tr>
               </thead>
               <tbody>
@@ -270,10 +271,20 @@ function ReceiptingPage() {
                     <td className="px-2">{p.funds?.name}</td>
                     <td className="px-2 text-right font-mono">{kes(p.amount)}</td>
                     <td className="px-2"><Pill kind={p.status === "confirmed" ? "ok" : p.status === "pending" ? "pending" : "arrears"}>{p.status}</Pill></td>
+                    <td className="px-2">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button onClick={() => printReceipt(p, school, "print")} title="Print" className="text-ink-soft hover:text-forest">
+                          <Printer className="h-3.5 w-3.5" />
+                        </button>
+                        <button onClick={() => printReceipt(p, school, "download")} title="Download" className="text-ink-soft hover:text-forest">
+                          <Download className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
                 {!recentQ.data?.length && (
-                  <tr><td colSpan={8} className="py-8 text-center text-ink-soft">No receipts yet.</td></tr>
+                  <tr><td colSpan={9} className="py-8 text-center text-ink-soft">No receipts yet.</td></tr>
                 )}
               </tbody>
             </table>
@@ -304,4 +315,73 @@ function ReceiptingPage() {
 
 function L({ label, children }: { label: string; children: React.ReactNode }) {
   return <label className="block"><span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-soft">{label}</span>{children}</label>;
+}
+
+function receiptHtml(p: any, school: any) {
+  const esc = (s: any) => String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" } as any)[c]);
+  const amountWords = (() => {
+    const n = Math.round(Number(p.amount));
+    try { return n.toLocaleString("en-KE"); } catch { return String(n); }
+  })();
+  return `<!doctype html><html><head><meta charset="utf-8"/><title>${esc(p.receipt_no)}</title>
+<style>
+  *{box-sizing:border-box}
+  body{font-family:Georgia,'Times New Roman',serif;margin:0;padding:48px;color:#1a1a1a;background:#fff}
+  .wrap{max-width:680px;margin:0 auto;border:1px solid #d5dad3;padding:36px 40px;position:relative}
+  .seal{position:absolute;right:36px;top:32px;border:1.5px solid #B8924F;color:#B8924F;font-family:Georgia,serif;font-weight:600;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:1px}
+  h1{font-size:22px;margin:0 0 4px}
+  .meta{font-size:12px;color:#666;margin-bottom:18px}
+  h2{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#1E5640;border-top:1px solid #d5dad3;border-bottom:1px solid #d5dad3;padding:10px 0;margin:24px 0 18px;text-align:center}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  td{padding:7px 4px;border-bottom:1px dotted #d5dad3;vertical-align:top}
+  .lab{color:#666;width:38%}
+  .val{font-weight:500}
+  .mono{font-family:'IBM Plex Mono',Menlo,monospace;font-size:12.5px}
+  .amount{margin-top:28px;padding:14px 18px;background:#F4F1EA;border:1px solid #d5dad3;display:flex;justify-content:space-between;align-items:center}
+  .amount .l{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#666}
+  .amount .v{font-family:'IBM Plex Mono',Menlo,monospace;font-size:22px;font-weight:600;color:#1E5640}
+  .sig{margin-top:48px;display:flex;justify-content:space-between;font-size:11px;color:#666}
+  .sig div{border-top:1px solid #333;padding-top:6px;width:42%;text-align:center}
+  .foot{margin-top:30px;text-align:center;font-size:10.5px;color:#999;letter-spacing:1px;text-transform:uppercase}
+  @media print { body{padding:0} .wrap{border:none} }
+</style></head><body>
+<div class="wrap">
+  <div class="seal">SF</div>
+  <h1>${esc(school?.name ?? "School")}</h1>
+  <div class="meta">${esc(school?.address ?? "")}${school?.phone ? " · " + esc(school.phone) : ""}${school?.code ? " · Reg " + esc(school.code) : ""}</div>
+  <h2>Official Receipt</h2>
+  <table>
+    <tr><td class="lab">Receipt No.</td><td class="val mono">${esc(p.receipt_no)}</td></tr>
+    <tr><td class="lab">Date</td><td class="val">${esc(p.paid_on)}</td></tr>
+    <tr><td class="lab">Received from</td><td class="val">${esc(p.students?.full_name ?? p.payer_name ?? "—")}${p.students?.admission_no ? ` <span class="mono">(${esc(p.students.admission_no)})</span>` : ""}</td></tr>
+    <tr><td class="lab">Fund</td><td class="val">${esc(p.funds?.name ?? "—")}</td></tr>
+    <tr><td class="lab">Payment method</td><td class="val">${esc(String(p.method).replace("_", " ").toUpperCase())}</td></tr>
+    <tr><td class="lab">Reference</td><td class="val mono">${esc(p.reference ?? "—")}</td></tr>
+    <tr><td class="lab">Status</td><td class="val">${esc(String(p.status).toUpperCase())}</td></tr>
+  </table>
+  <div class="amount"><div class="l">Amount received</div><div class="v">KES ${amountWords}</div></div>
+  <div class="sig"><div>Bursar's signature</div><div>School stamp</div></div>
+  <div class="foot">This is a computer-generated receipt · keep for your records</div>
+</div></body></html>`;
+}
+
+function printReceipt(p: any, school: any, mode: "print" | "download") {
+  const html = receiptHtml(p, school);
+  if (mode === "download") {
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${p.receipt_no}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast.success(`Downloaded ${p.receipt_no}.html — open and save as PDF for archive`);
+    return;
+  }
+  const w = window.open("", "_blank", "width=720,height=900");
+  if (!w) { toast.error("Pop-up blocked. Allow pop-ups to print receipts."); return; }
+  w.document.write(html + "<script>setTimeout(()=>window.print(),250)</script>");
+  w.document.close();
 }
