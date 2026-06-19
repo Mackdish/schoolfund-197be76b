@@ -238,12 +238,51 @@ function ReportsPage() {
     ],
   });
 
+  const tbDoc = (): ReportDoc => ({
+    schoolName: school?.name ?? "",
+    schoolCode: school?.code,
+    reportTitle: "Trial Balance",
+    subtitle: `${fundLabel} · as at ${to}`,
+    sections: [
+      {
+        title: "Trial balance",
+        columns: ["Code", "Account", "Type", "Debit (KES)", "Credit (KES)"],
+        rows: tbRows.map((r) => [r.code, r.name, r.type, r.debit || "", r.credit || ""]),
+        totals: ["", "Totals", "", tbDebit, tbCredit],
+      },
+    ],
+  });
+
+  const cbDoc = (): ReportDoc => ({
+    schoolName: school?.name ?? "",
+    schoolCode: school?.code,
+    reportTitle: "Cashbook Summary",
+    subtitle: `${fundLabel} · ${from} to ${to}`,
+    sections: [
+      {
+        title: "Cashbook summary per fund",
+        columns: ["Code", "Fund", "Opening (KES)", "Receipts (KES)", "Payments (KES)", "Closing (KES)"],
+        rows: cashbookSummary.map((r) => [r.code, r.name, r.opening, r.receipts, r.payments, r.closing]),
+        totals: [
+          "",
+          "Total",
+          sum(cashbookSummary.map((r) => r.opening)),
+          sum(cashbookSummary.map((r) => r.receipts)),
+          sum(cashbookSummary.map((r) => r.payments)),
+          sum(cashbookSummary.map((r) => r.closing)),
+        ],
+      },
+    ],
+  });
+
+  const currentDoc = (): ReportDoc =>
+    tab === "ie" ? ieDoc() : tab === "bs" ? bsDoc() : tab === "tb" ? tbDoc() : cbDoc();
   const exportPdf = () => {
-    const doc = tab === "ie" ? ieDoc() : bsDoc();
+    const doc = currentDoc();
     exportReportPdf(doc, `${slug(doc.reportTitle)}_${to}.pdf`);
   };
   const exportXlsx = () => {
-    const doc = tab === "ie" ? ieDoc() : bsDoc();
+    const doc = currentDoc();
     exportReportXlsx(doc, `${slug(doc.reportTitle)}_${to}.xlsx`);
   };
 
