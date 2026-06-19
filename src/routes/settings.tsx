@@ -353,9 +353,12 @@ function VoteHeadsTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolea
   const add = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("vote_heads").insert({
-        school_id: schoolId, fund_id: fundId, code: code.toUpperCase(), name,
+        school_id: schoolId, fund_id: fundId, code: code.toUpperCase().trim(), name: name.trim(),
       });
-      if (error) throw error;
+      if (error) {
+        if (error.code === "23505") throw new Error(`Vote head code "${code.toUpperCase()}" already exists.`);
+        throw error;
+      }
     },
     onSuccess: () => { toast.success("Vote head added"); setCode(""); setName(""); qc.invalidateQueries({ queryKey: ["vote-heads-full"] }); qc.invalidateQueries({ queryKey: ["vote-heads"] }); },
     onError: (e: any) => toast.error(e.message),
