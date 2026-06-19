@@ -1,5 +1,5 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -11,20 +11,24 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
 
-  if (!loading && user) return <Navigate to="/" />;
+  useEffect(() => {
+    if (!loading && user) navigate({ to: "/", replace: true });
+  }, [loading, user, navigate]);
+
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -33,7 +37,12 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("Account created. You are signed in.");
+        if (data.session) {
+          toast.success("Account created. You are signed in.");
+        } else {
+          toast.success("Account created. Check your email to confirm, then sign in.");
+          setMode("signin");
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -44,6 +53,7 @@ function AuthPage() {
       setBusy(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-paper flex items-center justify-center px-4">
