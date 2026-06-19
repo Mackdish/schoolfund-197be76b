@@ -239,3 +239,14 @@
 .sf-fade {
   animation: sf-fade-in 0.25s ease;
 }
+
+.sf-input {
+  width: 100%;
+  border: 1px solid var(--color-line-strong, #d6d6cf);
+  background: var(--color-surface, #fff);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+.sf-input:focus { outline: 2px solid rgba(184,146,79,0.35); outline-offset: 1px; }
