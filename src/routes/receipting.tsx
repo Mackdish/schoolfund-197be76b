@@ -8,7 +8,8 @@ import { useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { kes } from "@/lib/money";
-import { Check, Receipt, Download, Printer } from "lucide-react";
+import { Check, Receipt, Download, Printer, FileText } from "lucide-react";
+import { downloadReceiptPdf } from "@/lib/receipt-pdf";
 
 export const Route = createFileRoute("/receipting")({
   head: () => ({ meta: [{ title: "Receipting — SomaFin" }] }),
@@ -276,7 +277,17 @@ function ReceiptingPage() {
                         <button onClick={() => printReceipt(p, school, "print")} title="Print" className="text-ink-soft hover:text-forest">
                           <Printer className="h-3.5 w-3.5" />
                         </button>
-                        <button onClick={() => printReceipt(p, school, "download")} title="Download" className="text-ink-soft hover:text-forest">
+                        <button
+                          onClick={async () => {
+                            try { await downloadReceiptPdf(p, school as any); toast.success(`Downloaded ${p.receipt_no}.pdf`); }
+                            catch (e: any) { toast.error(e.message || "PDF export failed"); }
+                          }}
+                          title="Download PDF"
+                          className="inline-flex items-center gap-1 rounded border border-line-strong px-1.5 py-0.5 text-[10.5px] font-medium text-forest hover:bg-paper"
+                        >
+                          <FileText className="h-3 w-3" /> PDF
+                        </button>
+                        <button onClick={() => printReceipt(p, school, "download")} title="Download HTML" className="text-ink-soft hover:text-forest">
                           <Download className="h-3.5 w-3.5" />
                         </button>
                       </div>

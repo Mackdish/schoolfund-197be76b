@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, Trash2, CheckCircle2, Save } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, Save, Upload, Image as ImageIcon } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({ meta: [{ title: "Settings — SomaFin" }] }),
@@ -57,7 +57,7 @@ function SchoolTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean }
     queryFn: async () => {
       const { data, error } = await supabase
         .from("schools")
-        .select("id, name, code, county, motto, address, phone, email")
+        .select("id, name, code, county, motto, address, phone, email, logo_url, receipt_footer")
         .eq("id", schoolId)
         .maybeSingle();
       if (error) throw error;
@@ -66,6 +66,7 @@ function SchoolTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean }
   });
 
   const [form, setForm] = useState<any>(null);
+  const [uploading, setUploading] = useState(false);
   if (schoolQ.data && !form) setForm(schoolQ.data);
 
   const save = useMutation({
@@ -78,6 +79,8 @@ function SchoolTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean }
         address: form.address || null,
         phone: form.phone || null,
         email: form.email || null,
+        logo_url: form.logo_url || null,
+        receipt_footer: form.receipt_footer || null,
       }).eq("id", schoolId);
       if (error) throw error;
     },
@@ -89,19 +92,96 @@ function SchoolTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean }
     onError: (e: any) => toast.error(e.message),
   });
 
+  const handleLogoUpload = (file: File) => {
+    if (!file.type.startsWith("image/")) { toast.error("Please choose an image file"); return; }
+    if (file.size > 400 * 1024) { toast.error("Logo must be under 400 KB. Try a smaller image."); return; }
+    setUploading(true);
+    // Resize to max 256px and convert to PNG data URL for compact storage
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = () => {
+      img.onload = () => {
+        const max = 256;
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) { toast.error("Could not process image"); setUploading(false); return; }
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL("image/png");
+        setForm({ ...form, logo_url: dataUrl });
+        setUploading(false);
+        toast.success("Logo ready — click Save changes to apply");
+      };
+      img.onerror = () => { toast.error("Invalid image"); setUploading(false); };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
   if (!form) return <Panel><div className="text-[12.5px] text-ink-soft">Loading…</div></Panel>;
 
   return (
-    <Panel title="School profile">
-      <div className="grid grid-cols-2 gap-4">
-        <F label="School name"><input className="sf-input" value={form.name ?? ""} onChange={(e) => setForm({ ...form, name: e.target.value })} disabled={!canEdit} /></F>
-        <F label="BOM / registration code"><input className="sf-input" value={form.code ?? ""} onChange={(e) => setForm({ ...form, code: e.target.value })} disabled={!canEdit} /></F>
-        <F label="County"><input className="sf-input" value={form.county ?? ""} onChange={(e) => setForm({ ...form, county: e.target.value })} disabled={!canEdit} /></F>
-        <F label="Motto"><input className="sf-input" value={form.motto ?? ""} onChange={(e) => setForm({ ...form, motto: e.target.value })} disabled={!canEdit} /></F>
-        <F label="Address"><input className="sf-input" value={form.address ?? ""} onChange={(e) => setForm({ ...form, address: e.target.value })} disabled={!canEdit} /></F>
-        <F label="Phone"><input className="sf-input" value={form.phone ?? ""} onChange={(e) => setForm({ ...form, phone: e.target.value })} disabled={!canEdit} /></F>
-        <F label="Email"><input className="sf-input" value={form.email ?? ""} onChange={(e) => setForm({ ...form, email: e.target.value })} disabled={!canEdit} /></F>
-      </div>
+    <>
+      <Panel title="School profile">
+        <div className="grid grid-cols-2 gap-4">
+          <F label="School name"><input className="sf-input" value={form.name ?? ""} onChange={(e) => setForm({ ...form, name: e.target.value })} disabled={!canEdit} /></F>
+          <F label="BOM / registration code"><input className="sf-input" value={form.code ?? ""} onChange={(e) => setForm({ ...form, code: e.target.value })} disabled={!canEdit} /></F>
+          <F label="County"><input className="sf-input" value={form.county ?? ""} onChange={(e) => setForm({ ...form, county: e.target.value })} disabled={!canEdit} /></F>
+          <F label="Motto"><input className="sf-input" value={form.motto ?? ""} onChange={(e) => setForm({ ...form, motto: e.target.value })} disabled={!canEdit} /></F>
+          <F label="Address"><input className="sf-input" value={form.address ?? ""} onChange={(e) => setForm({ ...form, address: e.target.value })} disabled={!canEdit} /></F>
+          <F label="Phone"><input className="sf-input" value={form.phone ?? ""} onChange={(e) => setForm({ ...form, phone: e.target.value })} disabled={!canEdit} /></F>
+          <F label="Email"><input className="sf-input" value={form.email ?? ""} onChange={(e) => setForm({ ...form, email: e.target.value })} disabled={!canEdit} /></F>
+        </div>
+      </Panel>
+
+      <Panel title="Receipt branding">
+        <div className="grid grid-cols-[180px_1fr] gap-6">
+          <div>
+            <div className="block text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-soft mb-2">School logo</div>
+            <div className="flex h-[140px] w-[140px] items-center justify-center rounded-md border border-dashed border-line-strong bg-paper overflow-hidden">
+              {form.logo_url
+                ? <img src={form.logo_url} alt="School logo" className="max-h-full max-w-full object-contain" />
+                : <ImageIcon className="h-8 w-8 text-ink-soft opacity-50" />}
+            </div>
+            {canEdit && (
+              <div className="mt-3 flex flex-col gap-1.5">
+                <label className="inline-flex items-center justify-center gap-1.5 rounded-md border border-line-strong bg-surface px-3 py-1.5 text-[12px] font-medium cursor-pointer hover:bg-paper">
+                  <Upload className="h-3.5 w-3.5" /> {uploading ? "Processing…" : form.logo_url ? "Replace logo" : "Upload logo"}
+                  <input
+                    type="file" accept="image/png,image/jpeg,image/webp" className="hidden"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) handleLogoUpload(f); e.target.value = ""; }}
+                  />
+                </label>
+                {form.logo_url && (
+                  <button onClick={() => setForm({ ...form, logo_url: null })} className="text-[11.5px] text-garnet hover:underline">
+                    Remove logo
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+          <div>
+            <F label="Receipt footer message">
+              <textarea
+                rows={3}
+                className="sf-input"
+                value={form.receipt_footer ?? ""}
+                disabled={!canEdit}
+                onChange={(e) => setForm({ ...form, receipt_footer: e.target.value })}
+                placeholder="e.g. Thank you for your prompt payment. For queries call the bursar's office on 0712 345 678."
+              />
+            </F>
+            <p className="mt-2 text-[11.5px] text-ink-soft leading-snug">
+              Logo, school name, address, phone, registration code, motto and this footer all appear on every PDF receipt and printed voucher.
+              Use a square PNG/JPG under 400 KB for best results.
+            </p>
+          </div>
+        </div>
+      </Panel>
+
       {canEdit && (
         <div className="mt-4">
           <button onClick={() => save.mutate()} disabled={save.isPending} className="inline-flex items-center gap-1 rounded-md border border-forest bg-forest px-4 py-2 text-[12.5px] font-medium text-white hover:bg-[#163F31] disabled:opacity-60">
@@ -109,7 +189,7 @@ function SchoolTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean }
           </button>
         </div>
       )}
-    </Panel>
+    </>
   );
 }
 

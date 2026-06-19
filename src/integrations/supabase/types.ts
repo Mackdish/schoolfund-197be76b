@@ -1219,6 +1219,7 @@ export type Database = {
           motto: string | null
           name: string
           phone: string | null
+          receipt_footer: string | null
           updated_at: string
         }
         Insert: {
@@ -1232,6 +1233,7 @@ export type Database = {
           motto?: string | null
           name: string
           phone?: string | null
+          receipt_footer?: string | null
           updated_at?: string
         }
         Update: {
@@ -1245,6 +1247,7 @@ export type Database = {
           motto?: string | null
           name?: string
           phone?: string | null
+          receipt_footer?: string | null
           updated_at?: string
         }
         Relationships: []

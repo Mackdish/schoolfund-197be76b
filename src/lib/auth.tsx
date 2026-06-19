@@ -11,6 +11,11 @@ export type School = {
   code: string | null;
   county: string | null;
   motto: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  logo_url?: string | null;
+  receipt_footer?: string | null;
 };
 
 type Ctx = {
@@ -43,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (prof?.active_school_id) {
       const [{ data: s }, { data: rs }] = await Promise.all([
-        supabase.from("schools").select("id,name,code,county,motto").eq("id", prof.active_school_id).maybeSingle(),
+        supabase.from("schools").select("id,name,code,county,motto,address,phone,email,logo_url,receipt_footer").eq("id", prof.active_school_id).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", u.id).eq("school_id", prof.active_school_id),
       ]);
       setSchool((s as School) ?? null);
@@ -52,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // pick first school the user has a role on
       const { data: rs } = await supabase
         .from("user_roles")
-        .select("school_id, role, schools(id,name,code,county,motto)")
+        .select("school_id, role, schools(id,name,code,county,motto,address,phone,email,logo_url,receipt_footer)")
         .eq("user_id", u.id)
         .limit(1);
       const first = rs?.[0];
