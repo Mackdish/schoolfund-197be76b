@@ -18,7 +18,7 @@ export const Route = createFileRoute("/reports")({
   ),
 });
 
-type Tab = "ie" | "bs";
+type Tab = "ie" | "bs" | "tb" | "cb";
 
 function ReportsPage() {
   const { school } = useAuth();
@@ -82,11 +82,74 @@ function ReportsPage() {
   const ie = useMemo(() => aggregateByAccount(linesQ.data ?? []), [linesQ.data]);
   const itd = useMemo(() => aggregateByAccount(itdQ.data ?? []), [itdQ.data]);
 
+  // Cashbook summary per fund (period)
+  const cbQ = useQuery({
+    queryKey: ["report-cb", schoolId, from, to, fundId],
+    queryFn: async () => {
+      let q = supabase
+        .from("cashbook_entries")
+        .select("fund_id, entry_date, receipts, payments")
+        .eq("school_id", schoolId);
+      if (fundId) q = q.eq("fund_id", fundId);
+      const { data } = await q.limit(20000);
+      return (data ?? []) as any[];
+    },
+  });
+
+  const cashbookSummary = useMemo(() => {
+    const funds = (fundsQ.data ?? []).filter((f) => !fundId || f.id === fundId);
+    const all = cbQ.data ?? [];
+    return funds.map((f) => {
+      const open = Number(f.opening_balance ?? 0);
+      let priorNet = 0,
+        pReceipts = 0,
+        pPayments = 0;
+      for (const e of all) {
+        if (e.fund_id !== f.id) continue;
+        const r = Number(e.receipts ?? 0);
+        const p = Number(e.payments ?? 0);
+        if (e.entry_date < from) priorNet += r - p;
+        else if (e.entry_date <= to) {
+          pReceipts += r;
+          pPayments += p;
+        }
+      }
+      const opening = open + priorNet;
+      return {
+        id: f.id,
+        code: f.code,
+        name: f.name,
+        opening,
+        receipts: pReceipts,
+        payments: pPayments,
+        closing: opening + pReceipts - pPayments,
+      };
+    });
+  }, [cbQ.data, fundsQ.data, fundId, from, to]);
+
   const incomeRows = ie.filter((r) => r.type === "income");
   const expenseRows = ie.filter((r) => r.type === "expense");
   const totalIncome = sum(incomeRows.map((r) => r.credit - r.debit));
   const totalExpense = sum(expenseRows.map((r) => r.debit - r.credit));
   const surplus = totalIncome - totalExpense;
+
+  // Trial balance (as-at `to`)
+  const tbRows = useMemo(() => {
+    return itd.map((r) => {
+      const net = r.debit - r.credit;
+      const isDr = r.type === "asset" || r.type === "expense";
+      const bal = isDr ? net : -net;
+      return {
+        code: r.code,
+        name: r.name,
+        type: r.type,
+        debit: bal > 0 ? bal : 0,
+        credit: bal < 0 ? -bal : 0,
+      };
+    });
+  }, [itd]);
+  const tbDebit = sum(tbRows.map((r) => r.debit));
+  const tbCredit = sum(tbRows.map((r) => r.credit));
 
   const assets = itd
     .filter((r) => r.type === "asset")
@@ -175,12 +238,51 @@ function ReportsPage() {
     ],
   });
 
+  const tbDoc = (): ReportDoc => ({
+    schoolName: school?.name ?? "",
+    schoolCode: school?.code,
+    reportTitle: "Trial Balance",
+    subtitle: `${fundLabel} · as at ${to}`,
+    sections: [
+      {
+        title: "Trial balance",
+        columns: ["Code", "Account", "Type", "Debit (KES)", "Credit (KES)"],
+        rows: tbRows.map((r) => [r.code, r.name, r.type, r.debit || "", r.credit || ""]),
+        totals: ["", "Totals", "", tbDebit, tbCredit],
+      },
+    ],
+  });
+
+  const cbDoc = (): ReportDoc => ({
+    schoolName: school?.name ?? "",
+    schoolCode: school?.code,
+    reportTitle: "Cashbook Summary",
+    subtitle: `${fundLabel} · ${from} to ${to}`,
+    sections: [
+      {
+        title: "Cashbook summary per fund",
+        columns: ["Code", "Fund", "Opening (KES)", "Receipts (KES)", "Payments (KES)", "Closing (KES)"],
+        rows: cashbookSummary.map((r) => [r.code, r.name, r.opening, r.receipts, r.payments, r.closing]),
+        totals: [
+          "",
+          "Total",
+          sum(cashbookSummary.map((r) => r.opening)),
+          sum(cashbookSummary.map((r) => r.receipts)),
+          sum(cashbookSummary.map((r) => r.payments)),
+          sum(cashbookSummary.map((r) => r.closing)),
+        ],
+      },
+    ],
+  });
+
+  const currentDoc = (): ReportDoc =>
+    tab === "ie" ? ieDoc() : tab === "bs" ? bsDoc() : tab === "tb" ? tbDoc() : cbDoc();
   const exportPdf = () => {
-    const doc = tab === "ie" ? ieDoc() : bsDoc();
+    const doc = currentDoc();
     exportReportPdf(doc, `${slug(doc.reportTitle)}_${to}.pdf`);
   };
   const exportXlsx = () => {
-    const doc = tab === "ie" ? ieDoc() : bsDoc();
+    const doc = currentDoc();
     exportReportXlsx(doc, `${slug(doc.reportTitle)}_${to}.xlsx`);
   };
 
@@ -199,6 +301,8 @@ function ReportsPage() {
               [
                 ["ie", "Income & expenditure"],
                 ["bs", "Balance sheet"],
+                ["tb", "Trial balance"],
+                ["cb", "Cashbook summary"],
               ] as const
             ).map(([k, l]) => (
               <button
@@ -216,10 +320,10 @@ function ReportsPage() {
               value={from}
               onChange={(e) => setFrom(e.target.value)}
               className="rounded-md border border-line-strong bg-surface px-2 py-1.5 text-[12.5px]"
-              disabled={tab === "bs"}
+              disabled={tab === "bs" || tab === "tb"}
             />
           </F>
-          <F label={tab === "bs" ? "As at" : "To"}>
+          <F label={tab === "bs" || tab === "tb" ? "As at" : "To"}>
             <input
               type="date"
               value={to}
@@ -333,6 +437,108 @@ function ReportsPage() {
             </div>
           </Panel>
         </>
+      )}
+
+      {tab === "tb" && (
+        <Panel title={`Trial balance · as at ${to}`}>
+          <table className="w-full text-[12.5px]">
+            <thead>
+              <tr className="border-b border-line">
+                {["Code", "Account", "Type", "Debit", "Credit"].map((h, i) => (
+                  <th
+                    key={h}
+                    className={`px-2 py-2 text-[10.5px] font-medium uppercase tracking-wider text-ink-soft ${i >= 3 ? "text-right" : "text-left"}`}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {tbRows.map((r) => (
+                <tr key={r.code} className="border-b border-line">
+                  <td className="py-1.5 px-2 font-mono text-[11.5px] text-ink-soft">{r.code}</td>
+                  <td className="px-2">{r.name}</td>
+                  <td className="px-2 capitalize text-ink-soft">{r.type}</td>
+                  <td className="px-2 text-right font-mono">{r.debit ? kes(r.debit) : "—"}</td>
+                  <td className="px-2 text-right font-mono">{r.credit ? kes(r.credit) : "—"}</td>
+                </tr>
+              ))}
+              {!tbRows.length && (
+                <tr>
+                  <td colSpan={5} className="py-6 text-center text-ink-soft">
+                    Nothing posted.
+                  </td>
+                </tr>
+              )}
+              {tbRows.length > 0 && (
+                <tr className="border-t-2 border-line-strong font-medium">
+                  <td className="py-2 px-2" colSpan={3}>
+                    Totals
+                  </td>
+                  <td className="px-2 text-right font-mono">{kes(tbDebit)}</td>
+                  <td className="px-2 text-right font-mono">{kes(tbCredit)}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <div className="mt-3">
+            <Box
+              label="In balance"
+              value={Math.abs(tbDebit - tbCredit) < 0.5 ? "Yes" : `Variance ${kes(tbDebit - tbCredit)}`}
+              kind={Math.abs(tbDebit - tbCredit) < 0.5 ? "ok" : "warn"}
+            />
+          </div>
+        </Panel>
+      )}
+
+      {tab === "cb" && (
+        <Panel title={`Cashbook summary · ${from} → ${to}`}>
+          <table className="w-full text-[12.5px]">
+            <thead>
+              <tr className="border-b border-line">
+                {["Code", "Fund", "Opening", "Receipts", "Payments", "Closing"].map((h, i) => (
+                  <th
+                    key={h}
+                    className={`px-2 py-2 text-[10.5px] font-medium uppercase tracking-wider text-ink-soft ${i >= 2 ? "text-right" : "text-left"}`}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {cashbookSummary.map((r) => (
+                <tr key={r.id} className="border-b border-line">
+                  <td className="py-1.5 px-2 font-mono text-[11.5px] text-ink-soft">{r.code}</td>
+                  <td className="px-2">{r.name}</td>
+                  <td className="px-2 text-right font-mono">{kes(r.opening)}</td>
+                  <td className="px-2 text-right font-mono text-forest">{kes(r.receipts)}</td>
+                  <td className="px-2 text-right font-mono text-garnet">{kes(r.payments)}</td>
+                  <td className="px-2 text-right font-mono font-medium">{kes(r.closing)}</td>
+                </tr>
+              ))}
+              {!cashbookSummary.length && (
+                <tr>
+                  <td colSpan={6} className="py-6 text-center text-ink-soft">
+                    No cashbook activity.
+                  </td>
+                </tr>
+              )}
+              {cashbookSummary.length > 0 && (
+                <tr className="border-t-2 border-line-strong font-medium">
+                  <td className="py-2 px-2" colSpan={2}>
+                    Total
+                  </td>
+                  <td className="px-2 text-right font-mono">{kes(sum(cashbookSummary.map((r) => r.opening)))}</td>
+                  <td className="px-2 text-right font-mono">{kes(sum(cashbookSummary.map((r) => r.receipts)))}</td>
+                  <td className="px-2 text-right font-mono">{kes(sum(cashbookSummary.map((r) => r.payments)))}</td>
+                  <td className="px-2 text-right font-mono">{kes(sum(cashbookSummary.map((r) => r.closing)))}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </Panel>
       )}
     </>
   );
