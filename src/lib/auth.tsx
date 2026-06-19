@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // pick first school the user has a role on
       const { data: rs } = await supabase
         .from("user_roles")
-        .select("school_id, role, schools(id,name,code,county,motto)")
+        .select("school_id, role, schools(id,name,code,county,motto,address,phone,email,logo_url,receipt_footer)")
         .eq("user_id", u.id)
         .limit(1);
       const first = rs?.[0];
