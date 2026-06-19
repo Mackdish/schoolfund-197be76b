@@ -18,7 +18,7 @@ export const Route = createFileRoute("/reports")({
   ),
 });
 
-type Tab = "ie" | "bs";
+type Tab = "ie" | "bs" | "tb" | "cb";
 
 function ReportsPage() {
   const { school } = useAuth();
