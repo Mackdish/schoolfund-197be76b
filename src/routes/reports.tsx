@@ -301,6 +301,8 @@ function ReportsPage() {
               [
                 ["ie", "Income & expenditure"],
                 ["bs", "Balance sheet"],
+                ["tb", "Trial balance"],
+                ["cb", "Cashbook summary"],
               ] as const
             ).map(([k, l]) => (
               <button
@@ -318,10 +320,10 @@ function ReportsPage() {
               value={from}
               onChange={(e) => setFrom(e.target.value)}
               className="rounded-md border border-line-strong bg-surface px-2 py-1.5 text-[12.5px]"
-              disabled={tab === "bs"}
+              disabled={tab === "bs" || tab === "tb"}
             />
           </F>
-          <F label={tab === "bs" ? "As at" : "To"}>
+          <F label={tab === "bs" || tab === "tb" ? "As at" : "To"}>
             <input
               type="date"
               value={to}
