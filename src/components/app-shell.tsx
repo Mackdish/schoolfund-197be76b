@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { OnboardingWizard } from "@/components/onboarding";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { InstallPrompt } from "@/components/install-prompt";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -161,6 +162,7 @@ function Shell({ pathname, school, profile, signOut, children }: any) {
           {children}
         </div>
       </main>
+      <InstallPrompt />
     </div>
   );
 }

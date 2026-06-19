@@ -1,0 +1,16 @@
+{
+  "name": "SomaFin — School Treasury",
+  "short_name": "SomaFin",
+  "description": "School treasury for Kenyan secondary schools — fees, funds, ledger, receipts and reports.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F4F1EA",
+  "theme_color": "#1E5640",
+  "categories": ["finance", "education", "productivity"],
+  "icons": [
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
