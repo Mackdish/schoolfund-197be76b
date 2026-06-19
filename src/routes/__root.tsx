@@ -89,6 +89,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Lovable App" },
       { name: "twitter:description", content: "School Ledger is a web application for Kenyan secondary schools to manage finances across three statutory funds." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/80587627-566a-4eab-ad97-935af4fe87ea/id-preview-55034614--04e5ec3c-b2ff-4cc2-afdc-50d0baa51c6d.lovable.app-1781859718477.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/80587627-566a-4eab-ad97-935af4fe87ea/id-preview-55034614--04e5ec3c-b2ff-4cc2-afdc-50d0baa51c6d.lovable.app-1781859718477.png" },
     ],
     links: [
       {
