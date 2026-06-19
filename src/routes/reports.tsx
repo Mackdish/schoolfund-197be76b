@@ -438,6 +438,108 @@ function ReportsPage() {
           </Panel>
         </>
       )}
+
+      {tab === "tb" && (
+        <Panel title={`Trial balance · as at ${to}`}>
+          <table className="w-full text-[12.5px]">
+            <thead>
+              <tr className="border-b border-line">
+                {["Code", "Account", "Type", "Debit", "Credit"].map((h, i) => (
+                  <th
+                    key={h}
+                    className={`px-2 py-2 text-[10.5px] font-medium uppercase tracking-wider text-ink-soft ${i >= 3 ? "text-right" : "text-left"}`}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {tbRows.map((r) => (
+                <tr key={r.code} className="border-b border-line">
+                  <td className="py-1.5 px-2 font-mono text-[11.5px] text-ink-soft">{r.code}</td>
+                  <td className="px-2">{r.name}</td>
+                  <td className="px-2 capitalize text-ink-soft">{r.type}</td>
+                  <td className="px-2 text-right font-mono">{r.debit ? kes(r.debit) : "—"}</td>
+                  <td className="px-2 text-right font-mono">{r.credit ? kes(r.credit) : "—"}</td>
+                </tr>
+              ))}
+              {!tbRows.length && (
+                <tr>
+                  <td colSpan={5} className="py-6 text-center text-ink-soft">
+                    Nothing posted.
+                  </td>
+                </tr>
+              )}
+              {tbRows.length > 0 && (
+                <tr className="border-t-2 border-line-strong font-medium">
+                  <td className="py-2 px-2" colSpan={3}>
+                    Totals
+                  </td>
+                  <td className="px-2 text-right font-mono">{kes(tbDebit)}</td>
+                  <td className="px-2 text-right font-mono">{kes(tbCredit)}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <div className="mt-3">
+            <Box
+              label="In balance"
+              value={Math.abs(tbDebit - tbCredit) < 0.5 ? "Yes" : `Variance ${kes(tbDebit - tbCredit)}`}
+              kind={Math.abs(tbDebit - tbCredit) < 0.5 ? "ok" : "warn"}
+            />
+          </div>
+        </Panel>
+      )}
+
+      {tab === "cb" && (
+        <Panel title={`Cashbook summary · ${from} → ${to}`}>
+          <table className="w-full text-[12.5px]">
+            <thead>
+              <tr className="border-b border-line">
+                {["Code", "Fund", "Opening", "Receipts", "Payments", "Closing"].map((h, i) => (
+                  <th
+                    key={h}
+                    className={`px-2 py-2 text-[10.5px] font-medium uppercase tracking-wider text-ink-soft ${i >= 2 ? "text-right" : "text-left"}`}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {cashbookSummary.map((r) => (
+                <tr key={r.id} className="border-b border-line">
+                  <td className="py-1.5 px-2 font-mono text-[11.5px] text-ink-soft">{r.code}</td>
+                  <td className="px-2">{r.name}</td>
+                  <td className="px-2 text-right font-mono">{kes(r.opening)}</td>
+                  <td className="px-2 text-right font-mono text-forest">{kes(r.receipts)}</td>
+                  <td className="px-2 text-right font-mono text-garnet">{kes(r.payments)}</td>
+                  <td className="px-2 text-right font-mono font-medium">{kes(r.closing)}</td>
+                </tr>
+              ))}
+              {!cashbookSummary.length && (
+                <tr>
+                  <td colSpan={6} className="py-6 text-center text-ink-soft">
+                    No cashbook activity.
+                  </td>
+                </tr>
+              )}
+              {cashbookSummary.length > 0 && (
+                <tr className="border-t-2 border-line-strong font-medium">
+                  <td className="py-2 px-2" colSpan={2}>
+                    Total
+                  </td>
+                  <td className="px-2 text-right font-mono">{kes(sum(cashbookSummary.map((r) => r.opening)))}</td>
+                  <td className="px-2 text-right font-mono">{kes(sum(cashbookSummary.map((r) => r.receipts)))}</td>
+                  <td className="px-2 text-right font-mono">{kes(sum(cashbookSummary.map((r) => r.payments)))}</td>
+                  <td className="px-2 text-right font-mono">{kes(sum(cashbookSummary.map((r) => r.closing)))}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </Panel>
+      )}
     </>
   );
 }
