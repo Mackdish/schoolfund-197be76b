@@ -142,7 +142,10 @@ function TermsTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean })
         school_id: schoolId, year: Number(year), term,
         start_date: start, end_date: end, is_active: false,
       });
-      if (error) throw error;
+      if (error) {
+        if (error.code === "23505") throw new Error(`Term ${term}, ${year} already exists.`);
+        throw error;
+      }
     },
     onSuccess: () => { toast.success("Term added"); qc.invalidateQueries({ queryKey: ["terms-full"] }); qc.invalidateQueries({ queryKey: ["terms"] }); },
     onError: (e: any) => toast.error(e.message),
@@ -233,10 +236,15 @@ function ClassesTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean 
 
   const add = useMutation({
     mutationFn: async () => {
+      const streamClean = stream.trim().toUpperCase();
+      if (!streamClean) throw new Error("Stream is required");
       const { error } = await supabase.from("classes").insert({
-        school_id: schoolId, form: Number(form), stream, teacher_name: teacher || null,
+        school_id: schoolId, form: Number(form), stream: streamClean, teacher_name: teacher || null,
       });
-      if (error) throw error;
+      if (error) {
+        if (error.code === "23505") throw new Error(`Form ${form}${streamClean} already exists. Pick a different stream.`);
+        throw error;
+      }
     },
     onSuccess: () => { toast.success("Class added"); setTeacher(""); qc.invalidateQueries({ queryKey: ["classes-full"] }); qc.invalidateQueries({ queryKey: ["classes"] }); },
     onError: (e: any) => toast.error(e.message),
@@ -345,9 +353,12 @@ function VoteHeadsTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolea
   const add = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("vote_heads").insert({
-        school_id: schoolId, fund_id: fundId, code: code.toUpperCase(), name,
+        school_id: schoolId, fund_id: fundId, code: code.toUpperCase().trim(), name: name.trim(),
       });
-      if (error) throw error;
+      if (error) {
+        if (error.code === "23505") throw new Error(`Vote head code "${code.toUpperCase()}" already exists.`);
+        throw error;
+      }
     },
     onSuccess: () => { toast.success("Vote head added"); setCode(""); setName(""); qc.invalidateQueries({ queryKey: ["vote-heads-full"] }); qc.invalidateQueries({ queryKey: ["vote-heads"] }); },
     onError: (e: any) => toast.error(e.message),
