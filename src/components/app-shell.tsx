@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import {
   LayoutDashboard, Users, CreditCard, Wallet, BookOpen, BookText,
   Receipt, ArrowRight, HandCoins, FileBarChart, Plus, Building2,
-  Settings as SettingsIcon, UserCog, LogOut, Landmark,
+  Settings as SettingsIcon, UserCog, LogOut, Landmark, FileSignature,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { OnboardingWizard } from "@/components/onboarding";
@@ -19,6 +19,7 @@ const navItems = [
   { to: "/cashbook", label: "Cashbook", icon: BookText },
   { to: "/bank-rec", label: "Bank reconciliation", icon: Landmark },
   { to: "/receipting", label: "Receipting", icon: Receipt },
+  { to: "/vouchers", label: "Payment vouchers", icon: FileSignature },
   { to: "/promotion", label: "Promotion", icon: ArrowRight },
   { to: "/bursary", label: "Bursaries · capitation", icon: HandCoins },
   { to: "/reports", label: "Statutory reports", icon: FileBarChart },
