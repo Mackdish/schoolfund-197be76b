@@ -943,6 +943,95 @@ export type Database = {
           },
         ]
       }
+      payment_vouchers: {
+        Row: {
+          amount: number
+          approved_by: string | null
+          created_at: string
+          fund_id: string
+          id: string
+          journal_entry_id: string | null
+          memo: string | null
+          method: Database["public"]["Enums"]["payment_method"]
+          paid_on: string
+          payee: string
+          prepared_by: string | null
+          reference: string | null
+          school_id: string
+          status: Database["public"]["Enums"]["voucher_status"]
+          updated_at: string
+          vote_head_id: string | null
+          voucher_no: string
+        }
+        Insert: {
+          amount: number
+          approved_by?: string | null
+          created_at?: string
+          fund_id: string
+          id?: string
+          journal_entry_id?: string | null
+          memo?: string | null
+          method?: Database["public"]["Enums"]["payment_method"]
+          paid_on?: string
+          payee: string
+          prepared_by?: string | null
+          reference?: string | null
+          school_id: string
+          status?: Database["public"]["Enums"]["voucher_status"]
+          updated_at?: string
+          vote_head_id?: string | null
+          voucher_no: string
+        }
+        Update: {
+          amount?: number
+          approved_by?: string | null
+          created_at?: string
+          fund_id?: string
+          id?: string
+          journal_entry_id?: string | null
+          memo?: string | null
+          method?: Database["public"]["Enums"]["payment_method"]
+          paid_on?: string
+          payee?: string
+          prepared_by?: string | null
+          reference?: string | null
+          school_id?: string
+          status?: Database["public"]["Enums"]["voucher_status"]
+          updated_at?: string
+          vote_head_id?: string | null
+          voucher_no?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_vouchers_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "funds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_vouchers_journal_entry_id_fkey"
+            columns: ["journal_entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_vouchers_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_vouchers_vote_head_id_fkey"
+            columns: ["vote_head_id"]
+            isOneToOne: false
+            referencedRelation: "vote_heads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount: number
@@ -1408,7 +1497,9 @@ export type Database = {
         Returns: boolean
       }
       next_journal_no: { Args: { _school_id: string }; Returns: string }
+      next_voucher_no: { Args: { _school_id: string }; Returns: string }
       post_payment: { Args: { _payment_id: string }; Returns: string }
+      post_voucher: { Args: { _voucher_id: string }; Returns: string }
       run_promotion: {
         Args: { _from_term_id: string; _school_id: string; _to_term_id: string }
         Returns: Json
@@ -1439,6 +1530,7 @@ export type Database = {
         | "withdrawn"
         | "deceased"
       term_number: "1" | "2" | "3"
+      voucher_status: "draft" | "approved" | "paid" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1591,6 +1683,7 @@ export const Constants = {
         "deceased",
       ],
       term_number: ["1", "2", "3"],
+      voucher_status: ["draft", "approved", "paid", "cancelled"],
     },
   },
 } as const
