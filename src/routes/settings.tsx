@@ -142,7 +142,10 @@ function TermsTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean })
         school_id: schoolId, year: Number(year), term,
         start_date: start, end_date: end, is_active: false,
       });
-      if (error) throw error;
+      if (error) {
+        if (error.code === "23505") throw new Error(`Term ${term}, ${year} already exists.`);
+        throw error;
+      }
     },
     onSuccess: () => { toast.success("Term added"); qc.invalidateQueries({ queryKey: ["terms-full"] }); qc.invalidateQueries({ queryKey: ["terms"] }); },
     onError: (e: any) => toast.error(e.message),
