@@ -1,4 +1,4 @@
-import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate, Navigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import {
   LayoutDashboard, Users, CreditCard, Wallet, BookOpen, BookText,
@@ -48,10 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  if (!user) {
-    if (typeof window !== "undefined") navigate({ to: "/auth", replace: true });
-    return null;
-  }
+  if (!user) return <Navigate to="/auth" replace />;
   if (!school) return <OnboardingWizard />;
 
   return <Shell pathname={pathname} school={school} profile={profile} signOut={async () => { await signOut(); navigate({ to: "/auth", replace: true }); }}>{children}</Shell>;
