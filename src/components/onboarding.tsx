@@ -35,8 +35,8 @@ export function OnboardingWizard() {
     try {
       const { data: newSchoolId, error: e1 } = await supabase.rpc("create_school", {
         _name: name,
-        _code: code || null,
-        _county: county || null,
+        _code: code || undefined,
+        _county: county || undefined,
       });
       if (e1) throw e1;
       const school = { id: newSchoolId as unknown as string };
