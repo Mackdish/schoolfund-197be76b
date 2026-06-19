@@ -8,7 +8,8 @@ import { useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { kes } from "@/lib/money";
-import { Check, Receipt, Download, Printer } from "lucide-react";
+import { Check, Receipt, Download, Printer, FileText } from "lucide-react";
+import { downloadReceiptPdf } from "@/lib/receipt-pdf";
 
 export const Route = createFileRoute("/receipting")({
   head: () => ({ meta: [{ title: "Receipting — SomaFin" }] }),
