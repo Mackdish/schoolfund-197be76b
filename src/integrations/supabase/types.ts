@@ -316,6 +316,7 @@ export type Database = {
           amount_allocated: number
           created_at: string
           id: string
+          is_demo: boolean
           notes: string | null
           received_on: string
           reference: string | null
@@ -329,6 +330,7 @@ export type Database = {
           amount_allocated?: number
           created_at?: string
           id?: string
+          is_demo?: boolean
           notes?: string | null
           received_on?: string
           reference?: string | null
@@ -342,6 +344,7 @@ export type Database = {
           amount_allocated?: number
           created_at?: string
           id?: string
+          is_demo?: boolean
           notes?: string | null
           received_on?: string
           reference?: string | null
@@ -723,6 +726,7 @@ export type Database = {
           created_at: string
           id: string
           invoice_no: string
+          is_demo: boolean
           issue_date: string
           notes: string | null
           opening_balance: number
@@ -740,6 +744,7 @@ export type Database = {
           created_at?: string
           id?: string
           invoice_no: string
+          is_demo?: boolean
           issue_date?: string
           notes?: string | null
           opening_balance?: number
@@ -757,6 +762,7 @@ export type Database = {
           created_at?: string
           id?: string
           invoice_no?: string
+          is_demo?: boolean
           issue_date?: string
           notes?: string | null
           opening_balance?: number
@@ -950,6 +956,7 @@ export type Database = {
           created_at: string
           fund_id: string
           id: string
+          is_demo: boolean
           journal_entry_id: string | null
           memo: string | null
           method: Database["public"]["Enums"]["payment_method"]
@@ -969,6 +976,7 @@ export type Database = {
           created_at?: string
           fund_id: string
           id?: string
+          is_demo?: boolean
           journal_entry_id?: string | null
           memo?: string | null
           method?: Database["public"]["Enums"]["payment_method"]
@@ -988,6 +996,7 @@ export type Database = {
           created_at?: string
           fund_id?: string
           id?: string
+          is_demo?: boolean
           journal_entry_id?: string | null
           memo?: string | null
           method?: Database["public"]["Enums"]["payment_method"]
@@ -1038,6 +1047,7 @@ export type Database = {
           created_at: string
           fund_id: string
           id: string
+          is_demo: boolean
           method: Database["public"]["Enums"]["payment_method"]
           notes: string | null
           paid_on: string
@@ -1055,6 +1065,7 @@ export type Database = {
           created_at?: string
           fund_id: string
           id?: string
+          is_demo?: boolean
           method: Database["public"]["Enums"]["payment_method"]
           notes?: string | null
           paid_on?: string
@@ -1072,6 +1083,7 @@ export type Database = {
           created_at?: string
           fund_id?: string
           id?: string
+          is_demo?: boolean
           method?: Database["public"]["Enums"]["payment_method"]
           notes?: string | null
           paid_on?: string
@@ -1268,6 +1280,7 @@ export type Database = {
           guardian_relation: string | null
           id: string
           is_boarder: boolean
+          is_demo: boolean
           joined_on: string | null
           kcpe_marks: number | null
           school_id: string
@@ -1289,6 +1302,7 @@ export type Database = {
           guardian_relation?: string | null
           id?: string
           is_boarder?: boolean
+          is_demo?: boolean
           joined_on?: string | null
           kcpe_marks?: number | null
           school_id: string
@@ -1310,6 +1324,7 @@ export type Database = {
           guardian_relation?: string | null
           id?: string
           is_boarder?: boolean
+          is_demo?: boolean
           joined_on?: string | null
           kcpe_marks?: number | null
           school_id?: string
@@ -1470,6 +1485,7 @@ export type Database = {
         Args: { _school_id: string; _user_id: string }
         Returns: boolean
       }
+      clear_demo_data: { Args: { _school_id: string }; Returns: Json }
       create_school: {
         Args: {
           _code?: string
@@ -1507,6 +1523,7 @@ export type Database = {
         Args: { _from_term_id: string; _school_id: string; _to_term_id: string }
         Returns: Json
       }
+      seed_demo_data: { Args: { _school_id: string }; Returns: Json }
       unmatch_bank_line: { Args: { _line_id: string }; Returns: undefined }
     }
     Enums: {

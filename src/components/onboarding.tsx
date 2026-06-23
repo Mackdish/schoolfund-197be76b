@@ -95,7 +95,14 @@ export function OnboardingWizard() {
         ),
       );
 
-      toast.success("School ready. Welcome to SomaFin.");
+      // seed sample data so the dashboard isn't empty (deletable from Settings)
+      try {
+        await supabase.rpc("seed_demo_data", { _school_id: school.id });
+      } catch (seedErr) {
+        console.warn("Demo seed skipped:", seedErr);
+      }
+
+      toast.success("School ready with sample data. Welcome to SomaFin.");
       await refresh();
     } catch (err: any) {
       toast.error(err.message ?? "Setup failed");
