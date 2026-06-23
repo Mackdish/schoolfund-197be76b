@@ -183,13 +183,48 @@ function SchoolTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean }
       </Panel>
 
       {canEdit && (
-        <div className="mt-4">
+        <div className="mt-4 flex items-center justify-between gap-4">
           <button onClick={() => save.mutate()} disabled={save.isPending} className="inline-flex items-center gap-1 rounded-md border border-forest bg-forest px-4 py-2 text-[12.5px] font-medium text-white hover:bg-[#163F31] disabled:opacity-60">
             <Save className="h-3.5 w-3.5" /> Save changes
           </button>
+          <SampleDataActions schoolId={form.id} />
         </div>
       )}
     </>
+  );
+}
+
+function SampleDataActions({ schoolId }: { schoolId: string }) {
+  const [busy, setBusy] = useState<"seed" | "clear" | null>(null);
+  const clear = async () => {
+    if (!confirm("Permanently delete all sample students, invoices, payments, vouchers and bursaries from this school?")) return;
+    setBusy("clear");
+    try {
+      const { data, error } = await supabase.rpc("clear_demo_data", { _school_id: schoolId });
+      if (error) throw error;
+      const d = data as any;
+      toast.success(`Sample data cleared — ${d?.students ?? 0} students, ${d?.invoices ?? 0} invoices, ${d?.payments ?? 0} payments removed`);
+    } catch (e: any) { toast.error(e.message ?? "Failed to clear sample data"); }
+    finally { setBusy(null); }
+  };
+  const seed = async () => {
+    setBusy("seed");
+    try {
+      const { error } = await supabase.rpc("seed_demo_data", { _school_id: schoolId });
+      if (error) throw error;
+      toast.success("Sample data added");
+    } catch (e: any) { toast.error(e.message ?? "Failed to seed sample data"); }
+    finally { setBusy(null); }
+  };
+  return (
+    <div className="flex items-center gap-2">
+      <button onClick={seed} disabled={!!busy} className="rounded-md border border-line-strong bg-surface px-3 py-1.5 text-[12px] font-medium hover:bg-paper disabled:opacity-60">
+        {busy === "seed" ? "Adding…" : "Add sample data"}
+      </button>
+      <button onClick={clear} disabled={!!busy} className="rounded-md border border-garnet/40 bg-surface px-3 py-1.5 text-[12px] font-medium text-garnet hover:bg-garnet/5 disabled:opacity-60">
+        {busy === "clear" ? "Clearing…" : "Clear sample data"}
+      </button>
+    </div>
   );
 }
 
