@@ -10,6 +10,12 @@ type Receipt = {
   payer_name?: string | null;
   students?: { full_name?: string; admission_no?: string } | null;
   funds?: { name?: string } | null;
+  balance_info?: {
+    term_label?: string;
+    total_charges: number;
+    total_paid: number;
+    outstanding: number;
+  } | null;
 };
 
 type SchoolBranding = {
