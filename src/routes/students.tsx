@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
 import { PageHead, Panel, Pill } from "@/components/ui-bits";
 import { useAuth } from "@/lib/auth";
@@ -8,7 +8,7 @@ import { useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { toast } from "sonner";
 import { kes } from "@/lib/money";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, FileText } from "lucide-react";
 
 export const Route = createFileRoute("/students")({
   head: () => ({ meta: [{ title: "Students — SomaFin" }] }),
@@ -144,27 +144,33 @@ function StudentsPage() {
                 <th className="px-2 text-left">Guardian</th>
                 <th className="px-2 text-right font-mono">Balance</th>
                 <th className="px-2 text-left">Status</th>
+                <th className="px-2"></th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((s) => {
                 const bal = balancesQ.data?.get(s.id) ?? 0;
                 return (
-                  <tr key={s.id} onClick={() => setOpen(s)} className="border-b border-line cursor-pointer hover:bg-paper">
-                    <td className="py-2.5 px-2 font-mono text-[12px]">{s.admission_no}</td>
-                    <td className="px-2 font-medium">{s.full_name}</td>
-                    <td className="px-2">{s.class_id ? classMap.get(s.class_id) ?? "—" : "—"}</td>
-                    <td className="px-2">{s.is_boarder ? "Boarder" : "Day"}</td>
-                    <td className="px-2 text-ink-soft">{s.guardian_name ?? "—"}{s.guardian_phone ? ` · ${s.guardian_phone}` : ""}</td>
-                    <td className="px-2 text-right font-mono">{kes(bal)}</td>
-                    <td className="px-2">
+                  <tr key={s.id} className="border-b border-line hover:bg-paper">
+                    <td onClick={() => setOpen(s)} className="py-2.5 px-2 font-mono text-[12px] cursor-pointer">{s.admission_no}</td>
+                    <td onClick={() => setOpen(s)} className="px-2 font-medium cursor-pointer">{s.full_name}</td>
+                    <td onClick={() => setOpen(s)} className="px-2 cursor-pointer">{s.class_id ? classMap.get(s.class_id) ?? "—" : "—"}</td>
+                    <td onClick={() => setOpen(s)} className="px-2 cursor-pointer">{s.is_boarder ? "Boarder" : "Day"}</td>
+                    <td onClick={() => setOpen(s)} className="px-2 text-ink-soft cursor-pointer">{s.guardian_name ?? "—"}{s.guardian_phone ? ` · ${s.guardian_phone}` : ""}</td>
+                    <td onClick={() => setOpen(s)} className="px-2 text-right font-mono cursor-pointer">{kes(bal)}</td>
+                    <td onClick={() => setOpen(s)} className="px-2 cursor-pointer">
                       {bal > 0 ? <Pill kind="arrears">Arrears</Pill> : bal < 0 ? <Pill kind="credit">Credit</Pill> : <Pill kind="ok">Clear</Pill>}
+                    </td>
+                    <td className="px-2 text-right">
+                      <Link to="/students/$id/statement" params={{ id: s.id }} title="Fee statement" className="inline-flex items-center text-ink-soft hover:text-forest">
+                        <FileText className="h-3.5 w-3.5" />
+                      </Link>
                     </td>
                   </tr>
                 );
               })}
               {!filtered.length && (
-                <tr><td colSpan={7} className="py-10 text-center text-ink-soft">No students yet. Add the first admission.</td></tr>
+                <tr><td colSpan={8} className="py-10 text-center text-ink-soft">No students yet. Add the first admission.</td></tr>
               )}
             </tbody>
           </table>

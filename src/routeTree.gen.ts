@@ -10,12 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VouchersRouteImport } from './routes/vouchers'
+import { Route as SuppliersRouteImport } from './routes/suppliers'
 import { Route as StudentsRouteImport } from './routes/students'
+import { Route as StaffRouteImport } from './routes/staff'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ReceiptingRouteImport } from './routes/receipting'
 import { Route as PromotionRouteImport } from './routes/promotion'
+import { Route as PayrollRouteImport } from './routes/payroll'
 import { Route as LedgerRouteImport } from './routes/ledger'
+import { Route as IpsasRouteImport } from './routes/ipsas'
+import { Route as ImportRouteImport } from './routes/import'
 import { Route as FundsRouteImport } from './routes/funds'
 import { Route as FeesRouteImport } from './routes/fees'
 import { Route as CashbookRouteImport } from './routes/cashbook'
@@ -23,15 +28,26 @@ import { Route as BursaryRouteImport } from './routes/bursary'
 import { Route as BankRecRouteImport } from './routes/bank-rec'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudentsIdStatementRouteImport } from './routes/students.$id.statement'
 
 const VouchersRoute = VouchersRouteImport.update({
   id: '/vouchers',
   path: '/vouchers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuppliersRoute = SuppliersRouteImport.update({
+  id: '/suppliers',
+  path: '/suppliers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentsRoute = StudentsRouteImport.update({
   id: '/students',
   path: '/students',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StaffRoute = StaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -54,9 +70,24 @@ const PromotionRoute = PromotionRouteImport.update({
   path: '/promotion',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PayrollRoute = PayrollRouteImport.update({
+  id: '/payroll',
+  path: '/payroll',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LedgerRoute = LedgerRouteImport.update({
   id: '/ledger',
   path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IpsasRoute = IpsasRouteImport.update({
+  id: '/ipsas',
+  path: '/ipsas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImportRoute = ImportRouteImport.update({
+  id: '/import',
+  path: '/import',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FundsRoute = FundsRouteImport.update({
@@ -94,6 +125,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentsIdStatementRoute = StudentsIdStatementRouteImport.update({
+  id: '/$id/statement',
+  path: '/$id/statement',
+  getParentRoute: () => StudentsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,13 +139,19 @@ export interface FileRoutesByFullPath {
   '/cashbook': typeof CashbookRoute
   '/fees': typeof FeesRoute
   '/funds': typeof FundsRoute
+  '/import': typeof ImportRoute
+  '/ipsas': typeof IpsasRoute
   '/ledger': typeof LedgerRoute
+  '/payroll': typeof PayrollRoute
   '/promotion': typeof PromotionRoute
   '/receipting': typeof ReceiptingRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
-  '/students': typeof StudentsRoute
+  '/staff': typeof StaffRoute
+  '/students': typeof StudentsRouteWithChildren
+  '/suppliers': typeof SuppliersRoute
   '/vouchers': typeof VouchersRoute
+  '/students/$id/statement': typeof StudentsIdStatementRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -119,13 +161,19 @@ export interface FileRoutesByTo {
   '/cashbook': typeof CashbookRoute
   '/fees': typeof FeesRoute
   '/funds': typeof FundsRoute
+  '/import': typeof ImportRoute
+  '/ipsas': typeof IpsasRoute
   '/ledger': typeof LedgerRoute
+  '/payroll': typeof PayrollRoute
   '/promotion': typeof PromotionRoute
   '/receipting': typeof ReceiptingRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
-  '/students': typeof StudentsRoute
+  '/staff': typeof StaffRoute
+  '/students': typeof StudentsRouteWithChildren
+  '/suppliers': typeof SuppliersRoute
   '/vouchers': typeof VouchersRoute
+  '/students/$id/statement': typeof StudentsIdStatementRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -136,13 +184,19 @@ export interface FileRoutesById {
   '/cashbook': typeof CashbookRoute
   '/fees': typeof FeesRoute
   '/funds': typeof FundsRoute
+  '/import': typeof ImportRoute
+  '/ipsas': typeof IpsasRoute
   '/ledger': typeof LedgerRoute
+  '/payroll': typeof PayrollRoute
   '/promotion': typeof PromotionRoute
   '/receipting': typeof ReceiptingRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
-  '/students': typeof StudentsRoute
+  '/staff': typeof StaffRoute
+  '/students': typeof StudentsRouteWithChildren
+  '/suppliers': typeof SuppliersRoute
   '/vouchers': typeof VouchersRoute
+  '/students/$id/statement': typeof StudentsIdStatementRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -154,13 +208,19 @@ export interface FileRouteTypes {
     | '/cashbook'
     | '/fees'
     | '/funds'
+    | '/import'
+    | '/ipsas'
     | '/ledger'
+    | '/payroll'
     | '/promotion'
     | '/receipting'
     | '/reports'
     | '/settings'
+    | '/staff'
     | '/students'
+    | '/suppliers'
     | '/vouchers'
+    | '/students/$id/statement'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -170,13 +230,19 @@ export interface FileRouteTypes {
     | '/cashbook'
     | '/fees'
     | '/funds'
+    | '/import'
+    | '/ipsas'
     | '/ledger'
+    | '/payroll'
     | '/promotion'
     | '/receipting'
     | '/reports'
     | '/settings'
+    | '/staff'
     | '/students'
+    | '/suppliers'
     | '/vouchers'
+    | '/students/$id/statement'
   id:
     | '__root__'
     | '/'
@@ -186,13 +252,19 @@ export interface FileRouteTypes {
     | '/cashbook'
     | '/fees'
     | '/funds'
+    | '/import'
+    | '/ipsas'
     | '/ledger'
+    | '/payroll'
     | '/promotion'
     | '/receipting'
     | '/reports'
     | '/settings'
+    | '/staff'
     | '/students'
+    | '/suppliers'
     | '/vouchers'
+    | '/students/$id/statement'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -203,12 +275,17 @@ export interface RootRouteChildren {
   CashbookRoute: typeof CashbookRoute
   FeesRoute: typeof FeesRoute
   FundsRoute: typeof FundsRoute
+  ImportRoute: typeof ImportRoute
+  IpsasRoute: typeof IpsasRoute
   LedgerRoute: typeof LedgerRoute
+  PayrollRoute: typeof PayrollRoute
   PromotionRoute: typeof PromotionRoute
   ReceiptingRoute: typeof ReceiptingRoute
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
-  StudentsRoute: typeof StudentsRoute
+  StaffRoute: typeof StaffRoute
+  StudentsRoute: typeof StudentsRouteWithChildren
+  SuppliersRoute: typeof SuppliersRoute
   VouchersRoute: typeof VouchersRoute
 }
 
@@ -221,11 +298,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VouchersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/suppliers': {
+      id: '/suppliers'
+      path: '/suppliers'
+      fullPath: '/suppliers'
+      preLoaderRoute: typeof SuppliersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/students': {
       id: '/students'
       path: '/students'
       fullPath: '/students'
       preLoaderRoute: typeof StudentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staff': {
+      id: '/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof StaffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -256,11 +347,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PromotionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payroll': {
+      id: '/payroll'
+      path: '/payroll'
+      fullPath: '/payroll'
+      preLoaderRoute: typeof PayrollRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ledger': {
       id: '/ledger'
       path: '/ledger'
       fullPath: '/ledger'
       preLoaderRoute: typeof LedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ipsas': {
+      id: '/ipsas'
+      path: '/ipsas'
+      fullPath: '/ipsas'
+      preLoaderRoute: typeof IpsasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/import': {
+      id: '/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof ImportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/funds': {
@@ -312,8 +424,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/students/$id/statement': {
+      id: '/students/$id/statement'
+      path: '/$id/statement'
+      fullPath: '/students/$id/statement'
+      preLoaderRoute: typeof StudentsIdStatementRouteImport
+      parentRoute: typeof StudentsRoute
+    }
   }
 }
+
+interface StudentsRouteChildren {
+  StudentsIdStatementRoute: typeof StudentsIdStatementRoute
+}
+
+const StudentsRouteChildren: StudentsRouteChildren = {
+  StudentsIdStatementRoute: StudentsIdStatementRoute,
+}
+
+const StudentsRouteWithChildren = StudentsRoute._addFileChildren(
+  StudentsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -323,24 +454,19 @@ const rootRouteChildren: RootRouteChildren = {
   CashbookRoute: CashbookRoute,
   FeesRoute: FeesRoute,
   FundsRoute: FundsRoute,
+  ImportRoute: ImportRoute,
+  IpsasRoute: IpsasRoute,
   LedgerRoute: LedgerRoute,
+  PayrollRoute: PayrollRoute,
   PromotionRoute: PromotionRoute,
   ReceiptingRoute: ReceiptingRoute,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
-  StudentsRoute: StudentsRoute,
+  StaffRoute: StaffRoute,
+  StudentsRoute: StudentsRouteWithChildren,
+  SuppliersRoute: SuppliersRoute,
   VouchersRoute: VouchersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

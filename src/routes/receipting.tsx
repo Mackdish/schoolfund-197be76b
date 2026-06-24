@@ -279,7 +279,18 @@ function ReceiptingPage() {
                         </button>
                         <button
                           onClick={async () => {
-                            try { await downloadReceiptPdf(p, school as any); toast.success(`Downloaded ${p.receipt_no}.pdf`); }
+                            try {
+                              const studentId = (p.students as any)?.id ?? (await supabase.from("payments").select("student_id").eq("id", p.id).maybeSingle()).data?.student_id;
+                              let balance_info = null;
+                              if (studentId) {
+                                const { data: t } = await supabase.from("terms").select("id, term, year").eq("school_id", schoolId).eq("is_active", true).maybeSingle();
+                                const invRes = await supabase.from("invoices").select("total_charges, total_paid, balance, terms(term, year)").eq("student_id", studentId).eq("term_id", t?.id ?? "").maybeSingle();
+                                const inv: any = invRes.data;
+                                if (inv) balance_info = { term_label: inv.terms ? `Term ${inv.terms.term} ${inv.terms.year}` : undefined, total_charges: Number(inv.total_charges), total_paid: Number(inv.total_paid ?? 0), outstanding: Number(inv.balance) };
+                              }
+                              await downloadReceiptPdf({ ...p, balance_info } as any, school as any);
+                              toast.success(`Downloaded ${p.receipt_no}.pdf`);
+                            }
                             catch (e: any) { toast.error(e.message || "PDF export failed"); }
                           }}
                           title="Download PDF"

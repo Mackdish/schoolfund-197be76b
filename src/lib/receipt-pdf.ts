@@ -10,6 +10,12 @@ type Receipt = {
   payer_name?: string | null;
   students?: { full_name?: string; admission_no?: string } | null;
   funds?: { name?: string } | null;
+  balance_info?: {
+    term_label?: string;
+    total_charges: number;
+    total_paid: number;
+    outstanding: number;
+  } | null;
 };
 
 type SchoolBranding = {
@@ -138,7 +144,41 @@ export async function generateReceiptPdf(p: Receipt, school: SchoolBranding): Pr
   const amountStr = `KES ${Number(p.amount).toLocaleString("en-KE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   doc.text(amountStr, right - 16, y + 36, { align: "right" });
 
-  y += 100;
+  y += 70;
+
+  // Balance summary block (if provided)
+  if (p.balance_info) {
+    const b = p.balance_info;
+    doc.setDrawColor(...LINE);
+    doc.setLineWidth(0.4);
+    doc.rect(left, y, right - left, 60);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(...FOREST);
+    doc.text(b.term_label ? `FEE STATUS — ${b.term_label.toUpperCase()}` : "FEE STATUS", left + 12, y + 16);
+    const fmt2 = (n: number) => `KES ${n.toLocaleString("en-KE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...SOFT);
+    const col = (right - left) / 3;
+    const drawCol = (i: number, label: string, value: string, color: [number, number, number] = INK) => {
+      const cx = left + 12 + col * i;
+      doc.setTextColor(...SOFT);
+      doc.text(label, cx, y + 32);
+      doc.setFont("courier", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(...color);
+      doc.text(value, cx, y + 48);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+    };
+    drawCol(0, "TOTAL FEE", fmt2(b.total_charges));
+    drawCol(1, "TOTAL PAID", fmt2(b.total_paid), FOREST);
+    drawCol(2, "BALANCE", fmt2(b.outstanding), b.outstanding > 0 ? [184, 30, 30] : FOREST);
+    y += 78;
+  }
+
+
 
   // Signature lines
   doc.setDrawColor(...INK);
