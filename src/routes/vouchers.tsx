@@ -189,6 +189,9 @@ function NewVoucherDialog({
   onClose, schoolId, funds, voteHeads, userId,
 }: { onClose: () => void; schoolId: string; funds: any[]; voteHeads: any[]; userId?: string }) {
   const qc = useQueryClient();
+  const [payeeType, setPayeeType] = useState<"supplier" | "staff" | "other">("other");
+  const [supplierId, setSupplierId] = useState("");
+  const [staffId, setStaffId] = useState("");
   const [fundId, setFundId] = useState("");
   const [voteHeadId, setVoteHeadId] = useState("");
   const [payee, setPayee] = useState("");
@@ -199,16 +202,33 @@ function NewVoucherDialog({
   const [memo, setMemo] = useState("");
   const [payNow, setPayNow] = useState(false);
 
+  const suppliersQ = useQuery({
+    queryKey: ["suppliers-pick", schoolId],
+    queryFn: async () => {
+      const { data } = await supabase.from("suppliers" as any).select("id, name, bank_account, bank_name").eq("school_id", schoolId).eq("is_active", true).order("name");
+      return (data ?? []) as any[];
+    },
+  });
+  const staffQ = useQuery({
+    queryKey: ["staff-pick", schoolId],
+    queryFn: async () => {
+      const { data } = await supabase.from("staff" as any).select("id, full_name, employee_no, bank_account, bank_name").eq("school_id", schoolId).eq("is_active", true).order("full_name");
+      return (data ?? []) as any[];
+    },
+  });
+
   const filteredVH = voteHeads.filter((v) => !fundId || v.fund_id === fundId);
 
   const create = useMutation({
     mutationFn: async () => {
       const { data: nextNo, error: eN } = await supabase.rpc("next_voucher_no", { _school_id: schoolId });
       if (eN) throw eN;
-      const { error } = await supabase.from("payment_vouchers").insert({
+      const { error } = await (supabase.from("payment_vouchers") as any).insert({
         school_id: schoolId,
         fund_id: fundId,
         vote_head_id: voteHeadId || null,
+        supplier_id: payeeType === "supplier" ? supplierId || null : null,
+        staff_id: payeeType === "staff" ? staffId || null : null,
         voucher_no: nextNo as unknown as string,
         payee: payee.trim(),
         amount: Number(amount),
