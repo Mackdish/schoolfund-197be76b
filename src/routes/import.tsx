@@ -237,7 +237,7 @@ async function runImport(kind: EntityKind, rows: any[], schoolId: string): Promi
   let count = 0;
   if (kind === "students") {
     for (const r of rows) {
-      const { error } = await supabase.from("students").insert({
+      const { error } = await (supabase.from("students") as any).insert({
         school_id: schoolId, admission_no: String(r.admission_no), full_name: r.full_name,
         gender: r.gender || null, class_id: r._class_id, is_boarder: String(r.is_boarder).toLowerCase() === "true",
         guardian_name: r.guardian_name || null, guardian_phone: r.guardian_phone || null,
@@ -280,15 +280,15 @@ async function runImport(kind: EntityKind, rows: any[], schoolId: string): Promi
     for (const [key, items] of groups) {
       const [class_id, term_id, isBoarder] = key.split("|");
       const is_boarder = isBoarder === "true";
-      let { data: existing } = await supabase.from("fee_structures").select("id").eq("school_id", schoolId).eq("term_id", term_id).eq("class_id", class_id).eq("is_boarder", is_boarder).maybeSingle();
-      let fsId = existing?.id;
+      const existingRes: any = await supabase.from("fee_structures").select("id").eq("school_id", schoolId).eq("term_id", term_id).eq("class_id", class_id).eq("is_boarder", is_boarder).maybeSingle();
+      let fsId: string | undefined = existingRes.data?.id;
       if (!fsId) {
-        const { data: ins, error: e } = await supabase.from("fee_structures").insert({ school_id: schoolId, term_id, class_id, is_boarder, name: "Imported" }).select("id").single();
-        if (e) continue;
-        fsId = ins.id;
+        const insRes: any = await (supabase.from("fee_structures") as any).insert({ school_id: schoolId, term_id, class_id, is_boarder, name: "Imported" }).select("id").single();
+        if (insRes.error) continue;
+        fsId = insRes.data.id;
       }
       for (const it of items) {
-        await supabase.from("fee_structure_items").upsert({ fee_structure_id: fsId, vote_head_id: it._vote_head_id, amount: Number(it.amount) });
+        await (supabase.from("fee_structure_items") as any).upsert({ fee_structure_id: fsId, vote_head_id: it._vote_head_id, amount: Number(it.amount) });
         count++;
       }
     }
