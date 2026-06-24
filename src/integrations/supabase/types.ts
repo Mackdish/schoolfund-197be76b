@@ -634,6 +634,56 @@ export type Database = {
           },
         ]
       }
+      financial_years: {
+        Row: {
+          closed_by: string | null
+          closed_on: string | null
+          created_at: string
+          ends_on: string
+          id: string
+          is_active: boolean
+          is_closed: boolean
+          label: string
+          school_id: string
+          starts_on: string
+          updated_at: string
+        }
+        Insert: {
+          closed_by?: string | null
+          closed_on?: string | null
+          created_at?: string
+          ends_on: string
+          id?: string
+          is_active?: boolean
+          is_closed?: boolean
+          label: string
+          school_id: string
+          starts_on: string
+          updated_at?: string
+        }
+        Update: {
+          closed_by?: string | null
+          closed_on?: string | null
+          created_at?: string
+          ends_on?: string
+          id?: string
+          is_active?: boolean
+          is_closed?: boolean
+          label?: string
+          school_id?: string
+          starts_on?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_years_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       funds: {
         Row: {
           bank_account_no: string | null
@@ -671,6 +721,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "funds_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      import_runs: {
+        Row: {
+          created_at: string
+          entity: string
+          error_count: number
+          errors: Json
+          file_name: string | null
+          id: string
+          ok_count: number
+          ran_by: string | null
+          school_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity: string
+          error_count?: number
+          errors?: Json
+          file_name?: string | null
+          id?: string
+          ok_count?: number
+          ran_by?: string | null
+          school_id: string
+        }
+        Update: {
+          created_at?: string
+          entity?: string
+          error_count?: number
+          errors?: Json
+          file_name?: string | null
+          id?: string
+          ok_count?: number
+          ran_by?: string | null
+          school_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_runs_school_id_fkey"
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
@@ -965,7 +1059,9 @@ export type Database = {
           prepared_by: string | null
           reference: string | null
           school_id: string
+          staff_id: string | null
           status: Database["public"]["Enums"]["voucher_status"]
+          supplier_id: string | null
           updated_at: string
           vote_head_id: string | null
           voucher_no: string
@@ -985,7 +1081,9 @@ export type Database = {
           prepared_by?: string | null
           reference?: string | null
           school_id: string
+          staff_id?: string | null
           status?: Database["public"]["Enums"]["voucher_status"]
+          supplier_id?: string | null
           updated_at?: string
           vote_head_id?: string | null
           voucher_no: string
@@ -1005,7 +1103,9 @@ export type Database = {
           prepared_by?: string | null
           reference?: string | null
           school_id?: string
+          staff_id?: string | null
           status?: Database["public"]["Enums"]["voucher_status"]
+          supplier_id?: string | null
           updated_at?: string
           vote_head_id?: string | null
           voucher_no?: string
@@ -1030,6 +1130,20 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_vouchers_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_vouchers_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
             referencedColumns: ["id"]
           },
           {
@@ -1116,6 +1230,136 @@ export type Database = {
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payroll_lines: {
+        Row: {
+          created_at: string
+          deductions: Json
+          gross: number
+          id: string
+          net: number
+          payroll_run_id: string
+          staff_id: string
+          total_deductions: number
+          voucher_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          deductions?: Json
+          gross?: number
+          id?: string
+          net?: number
+          payroll_run_id: string
+          staff_id: string
+          total_deductions?: number
+          voucher_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          deductions?: Json
+          gross?: number
+          id?: string
+          net?: number
+          payroll_run_id?: string
+          staff_id?: string
+          total_deductions?: number
+          voucher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_lines_payroll_run_id_fkey"
+            columns: ["payroll_run_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_lines_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_lines_voucher_id_fkey"
+            columns: ["voucher_id"]
+            isOneToOne: false
+            referencedRelation: "payment_vouchers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payroll_runs: {
+        Row: {
+          approved_by: string | null
+          created_at: string
+          fund_id: string
+          id: string
+          is_demo: boolean
+          notes: string | null
+          period_month: string
+          posted_at: string | null
+          prepared_by: string | null
+          run_no: string
+          school_id: string
+          status: Database["public"]["Enums"]["payroll_status"]
+          total_deductions: number
+          total_gross: number
+          total_net: number
+          updated_at: string
+        }
+        Insert: {
+          approved_by?: string | null
+          created_at?: string
+          fund_id: string
+          id?: string
+          is_demo?: boolean
+          notes?: string | null
+          period_month: string
+          posted_at?: string | null
+          prepared_by?: string | null
+          run_no: string
+          school_id: string
+          status?: Database["public"]["Enums"]["payroll_status"]
+          total_deductions?: number
+          total_gross?: number
+          total_net?: number
+          updated_at?: string
+        }
+        Update: {
+          approved_by?: string | null
+          created_at?: string
+          fund_id?: string
+          id?: string
+          is_demo?: boolean
+          notes?: string | null
+          period_month?: string
+          posted_at?: string | null
+          prepared_by?: string | null
+          run_no?: string
+          school_id?: string
+          status?: Database["public"]["Enums"]["payroll_status"]
+          total_deductions?: number
+          total_gross?: number
+          total_net?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_runs_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "funds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_runs_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
             referencedColumns: ["id"]
           },
         ]
@@ -1264,6 +1508,80 @@ export type Database = {
         }
         Relationships: []
       }
+      staff: {
+        Row: {
+          bank_account: string | null
+          bank_branch: string | null
+          bank_name: string | null
+          created_at: string
+          department: string | null
+          email: string | null
+          employee_no: string
+          employment_date: string | null
+          full_name: string
+          gross_salary: number
+          id: string
+          is_active: boolean
+          is_demo: boolean
+          kra_pin: string | null
+          national_id: string | null
+          phone: string | null
+          position: string | null
+          school_id: string
+          updated_at: string
+        }
+        Insert: {
+          bank_account?: string | null
+          bank_branch?: string | null
+          bank_name?: string | null
+          created_at?: string
+          department?: string | null
+          email?: string | null
+          employee_no: string
+          employment_date?: string | null
+          full_name: string
+          gross_salary?: number
+          id?: string
+          is_active?: boolean
+          is_demo?: boolean
+          kra_pin?: string | null
+          national_id?: string | null
+          phone?: string | null
+          position?: string | null
+          school_id: string
+          updated_at?: string
+        }
+        Update: {
+          bank_account?: string | null
+          bank_branch?: string | null
+          bank_name?: string | null
+          created_at?: string
+          department?: string | null
+          email?: string | null
+          employee_no?: string
+          employment_date?: string | null
+          full_name?: string
+          gross_salary?: number
+          id?: string
+          is_active?: boolean
+          is_demo?: boolean
+          kra_pin?: string | null
+          national_id?: string | null
+          phone?: string | null
+          position?: string | null
+          school_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       students: {
         Row: {
           admission_no: string
@@ -1341,6 +1659,80 @@ export type Database = {
           },
           {
             foreignKeyName: "students_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suppliers: {
+        Row: {
+          address: string | null
+          bank_account: string | null
+          bank_branch: string | null
+          bank_name: string | null
+          category: string | null
+          contact_person: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean
+          is_demo: boolean
+          kra_pin: string | null
+          name: string
+          notes: string | null
+          opening_balance: number
+          phone: string | null
+          school_id: string
+          supplier_no: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          bank_account?: string | null
+          bank_branch?: string | null
+          bank_name?: string | null
+          category?: string | null
+          contact_person?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          is_demo?: boolean
+          kra_pin?: string | null
+          name: string
+          notes?: string | null
+          opening_balance?: number
+          phone?: string | null
+          school_id: string
+          supplier_no: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          bank_account?: string | null
+          bank_branch?: string | null
+          bank_name?: string | null
+          category?: string | null
+          contact_person?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          is_demo?: boolean
+          kra_pin?: string | null
+          name?: string
+          notes?: string | null
+          opening_balance?: number
+          phone?: string | null
+          school_id?: string
+          supplier_no?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suppliers_school_id_fkey"
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
@@ -1486,6 +1878,7 @@ export type Database = {
         Returns: boolean
       }
       clear_demo_data: { Args: { _school_id: string }; Returns: Json }
+      close_financial_year: { Args: { _fy_id: string }; Returns: undefined }
       create_school: {
         Args: {
           _code?: string
@@ -1515,9 +1908,16 @@ export type Database = {
         Args: { _school_id: string; _user_id: string }
         Returns: boolean
       }
+      next_employee_no: { Args: { _school_id: string }; Returns: string }
       next_journal_no: { Args: { _school_id: string }; Returns: string }
+      next_payroll_no: {
+        Args: { _period: string; _school_id: string }
+        Returns: string
+      }
+      next_supplier_no: { Args: { _school_id: string }; Returns: string }
       next_voucher_no: { Args: { _school_id: string }; Returns: string }
       post_payment: { Args: { _payment_id: string }; Returns: string }
+      post_payroll_run: { Args: { _run_id: string }; Returns: Json }
       post_voucher: { Args: { _voucher_id: string }; Returns: string }
       run_promotion: {
         Args: { _from_term_id: string; _school_id: string; _to_term_id: string }
@@ -1543,6 +1943,7 @@ export type Database = {
         | "bursary"
         | "other"
       payment_status: "pending" | "confirmed" | "reversed"
+      payroll_status: "draft" | "approved" | "posted" | "cancelled"
       student_status:
         | "active"
         | "transferred"
@@ -1695,6 +2096,7 @@ export const Constants = {
         "other",
       ],
       payment_status: ["pending", "confirmed", "reversed"],
+      payroll_status: ["draft", "approved", "posted", "cancelled"],
       student_status: [
         "active",
         "transferred",
