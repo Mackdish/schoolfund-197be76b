@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Users, CreditCard, Wallet, BookOpen, BookText,
   Receipt, ArrowRight, HandCoins, FileBarChart, Plus, Building2,
   Settings as SettingsIcon, UserCog, LogOut, Landmark, FileSignature,
+  ScrollText, Truck, Briefcase, Upload,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { OnboardingWizard } from "@/components/onboarding";
@@ -21,9 +22,14 @@ const navItems = [
   { to: "/bank-rec", label: "Bank reconciliation", icon: Landmark },
   { to: "/receipting", label: "Receipting", icon: Receipt },
   { to: "/vouchers", label: "Payment vouchers", icon: FileSignature },
+  { to: "/suppliers", label: "Suppliers", icon: Truck },
+  { to: "/staff", label: "Staff", icon: Briefcase },
+  { to: "/payroll", label: "Payroll", icon: HandCoins },
   { to: "/promotion", label: "Promotion", icon: ArrowRight },
   { to: "/bursary", label: "Bursaries · capitation", icon: HandCoins },
+  { to: "/ipsas", label: "IPSAS reports", icon: ScrollText },
   { to: "/reports", label: "Statutory reports", icon: FileBarChart },
+  { to: "/import", label: "Bulk import", icon: Upload },
 ] as const;
 
 const quickActions = [
