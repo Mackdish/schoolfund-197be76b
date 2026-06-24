@@ -273,9 +273,45 @@ function NewVoucherDialog({
               {filteredVH.map((v) => <option key={v.id} value={v.id}>{v.code} · {v.name}</option>)}
             </select>
           </Field>
-          <Field label="Payee" className="col-span-2">
-            <input className="sf-input" value={payee} onChange={(e) => setPayee(e.target.value)} placeholder="Kenya Power & Lighting Co." />
+          <Field label="Payee type" className="col-span-2">
+            <div className="flex gap-3 text-[12px]">
+              {(["supplier", "staff", "other"] as const).map((t) => (
+                <label key={t} className="inline-flex items-center gap-1.5">
+                  <input type="radio" name="payeeType" checked={payeeType === t} onChange={() => { setPayeeType(t); setPayee(""); setSupplierId(""); setStaffId(""); }} />
+                  <span className="capitalize">{t}</span>
+                </label>
+              ))}
+            </div>
           </Field>
+          {payeeType === "supplier" && (
+            <Field label="Supplier" className="col-span-2">
+              <select className="sf-input" value={supplierId} onChange={(e) => {
+                setSupplierId(e.target.value);
+                const s = (suppliersQ.data ?? []).find((x) => x.id === e.target.value);
+                if (s) { setPayee(s.name); setReference(s.bank_account ?? ""); }
+              }}>
+                <option value="">Choose supplier…</option>
+                {(suppliersQ.data ?? []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </Field>
+          )}
+          {payeeType === "staff" && (
+            <Field label="Staff" className="col-span-2">
+              <select className="sf-input" value={staffId} onChange={(e) => {
+                setStaffId(e.target.value);
+                const s = (staffQ.data ?? []).find((x) => x.id === e.target.value);
+                if (s) { setPayee(s.full_name); setReference(s.bank_account ?? ""); }
+              }}>
+                <option value="">Choose staff…</option>
+                {(staffQ.data ?? []).map((s) => <option key={s.id} value={s.id}>{s.full_name} ({s.employee_no})</option>)}
+              </select>
+            </Field>
+          )}
+          {payeeType === "other" && (
+            <Field label="Payee" className="col-span-2">
+              <input className="sf-input" value={payee} onChange={(e) => setPayee(e.target.value)} placeholder="Kenya Power & Lighting Co." />
+            </Field>
+          )}
           <Field label="Amount (KES)">
             <input className="sf-input" type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
           </Field>
