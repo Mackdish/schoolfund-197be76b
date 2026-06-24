@@ -299,8 +299,8 @@ async function runImport(kind: EntityKind, rows: any[], schoolId: string): Promi
       const { data: nextNo } = await supabase.from("invoices").select("invoice_no").eq("school_id", schoolId).order("created_at", { ascending: false }).limit(1);
       const seq = nextNo?.[0]?.invoice_no?.match(/(\d+)/)?.[1];
       const newSeq = (seq ? Number(seq) + 1 : 1001).toString().padStart(5, "0");
-      const { error } = await supabase.from("invoices").insert({
-        school_id: schoolId, student_id: r._student_id, term_id: term.id,
+      const { error } = await (supabase.from("invoices") as any).insert({
+        school_id: schoolId, student_id: r._student_id, term_id: (term as any).id,
         invoice_no: `INV-${newSeq}`, opening_balance: Number(r.amount), total_charges: 0,
         balance: Number(r.amount), notes: "Opening balance — imported",
       });
