@@ -189,40 +189,68 @@ function NewVoucherDialog({
   onClose, schoolId, funds, voteHeads, userId,
 }: { onClose: () => void; schoolId: string; funds: any[]; voteHeads: any[]; userId?: string }) {
   const qc = useQueryClient();
-  const [payeeType, setPayeeType] = useState<"supplier" | "staff" | "other">("other");
+  const [payeeType, setPayeeType] = useState<"supplier" | "staff" | "other">("staff");
   const [supplierId, setSupplierId] = useState("");
   const [staffId, setStaffId] = useState("");
+  const [fyId, setFyId] = useState("");
   const [fundId, setFundId] = useState("");
   const [voteHeadId, setVoteHeadId] = useState("");
   const [payee, setPayee] = useState("");
+  const [account, setAccount] = useState("");
   const [amount, setAmount] = useState("");
   const [paidOn, setPaidOn] = useState(new Date().toISOString().slice(0, 10));
-  const [method, setMethod] = useState<(typeof METHODS)[number]>("cash");
-  const [reference, setReference] = useState("");
+  const [method, setMethod] = useState<(typeof METHODS)[number]>("cheque");
+  const [chequeNo, setChequeNo] = useState("");
+  const [bank, setBank] = useState("");
   const [memo, setMemo] = useState("");
   const [payNow, setPayNow] = useState(false);
+  const [staffSearch, setStaffSearch] = useState("");
+  const [supplierSearch, setSupplierSearch] = useState("");
+
+  const fyQ = useQuery({
+    queryKey: ["fys", schoolId],
+    queryFn: async () => {
+      const { data } = await supabase.from("financial_years" as any).select("id, label, is_active, starts_on, ends_on").eq("school_id", schoolId).order("starts_on", { ascending: false });
+      return (data ?? []) as any[];
+    },
+  });
+  if (!fyId && fyQ.data?.length) {
+    const active = fyQ.data.find((f: any) => f.is_active) ?? fyQ.data[0];
+    if (active) setTimeout(() => setFyId(active.id), 0);
+  }
 
   const suppliersQ = useQuery({
     queryKey: ["suppliers-pick", schoolId],
     queryFn: async () => {
-      const { data } = await supabase.from("suppliers" as any).select("id, name, bank_account, bank_name").eq("school_id", schoolId).eq("is_active", true).order("name");
+      const { data } = await supabase.from("suppliers" as any).select("id, supplier_no, name, kra_pin, phone, bank_account, bank_name, bank_branch").eq("school_id", schoolId).eq("is_active", true).order("name");
       return (data ?? []) as any[];
     },
   });
   const staffQ = useQuery({
-    queryKey: ["staff-pick", schoolId],
+    queryKey: ["staff-pick-full", schoolId],
     queryFn: async () => {
-      const { data } = await supabase.from("staff" as any).select("id, full_name, employee_no, bank_account, bank_name").eq("school_id", schoolId).eq("is_active", true).order("full_name");
+      const { data } = await supabase.from("staff" as any).select("id, employee_no, full_name, national_id, kra_pin, employment_date, bank_account, bank_name, bank_branch, position").eq("school_id", schoolId).eq("is_active", true).order("full_name");
       return (data ?? []) as any[];
     },
   });
 
   const filteredVH = voteHeads.filter((v) => !fundId || v.fund_id === fundId);
+  const filteredStaff = (staffQ.data ?? []).filter((s) => {
+    if (!staffSearch.trim()) return true;
+    const q = staffSearch.toLowerCase();
+    return [s.employee_no, s.full_name, s.national_id, s.kra_pin, s.position].filter(Boolean).some((v: string) => v.toLowerCase().includes(q));
+  });
+  const filteredSuppliers = (suppliersQ.data ?? []).filter((s) => {
+    if (!supplierSearch.trim()) return true;
+    const q = supplierSearch.toLowerCase();
+    return [s.supplier_no, s.name, s.kra_pin, s.phone].filter(Boolean).some((v: string) => v.toLowerCase().includes(q));
+  });
 
   const create = useMutation({
     mutationFn: async () => {
       const { data: nextNo, error: eN } = await supabase.rpc("next_voucher_no", { _school_id: schoolId });
       if (eN) throw eN;
+      const refParts = [chequeNo && `CHQ:${chequeNo}`, account && `A/C:${account}`, bank && `BANK:${bank}`].filter(Boolean).join(" · ");
       const { error } = await (supabase.from("payment_vouchers") as any).insert({
         school_id: schoolId,
         fund_id: fundId,
@@ -234,7 +262,7 @@ function NewVoucherDialog({
         amount: Number(amount),
         paid_on: paidOn,
         method,
-        reference: reference || null,
+        reference: refParts || null,
         memo: memo || null,
         status: payNow ? "paid" : "draft",
         prepared_by: userId,
@@ -254,13 +282,131 @@ function NewVoucherDialog({
 
   const disabled = !fundId || !payee.trim() || !Number(amount) || create.isPending;
 
+  function pickStaff(s: any) {
+    setStaffId(s.id);
+    setPayee(s.full_name);
+    setAccount(s.bank_account ?? "");
+    setBank([s.bank_name, s.bank_branch].filter(Boolean).join(" — "));
+  }
+  function pickSupplier(s: any) {
+    setSupplierId(s.id);
+    setPayee(s.name);
+    setAccount(s.bank_account ?? "");
+    setBank([s.bank_name, s.bank_branch].filter(Boolean).join(" — "));
+  }
+
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-[560px]">
+      <DialogContent className="max-w-[880px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>New payment voucher</DialogTitle>
+          <DialogTitle>Payment Voucher · Preparation</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-2 gap-3">
+
+        <div className="rounded-md border border-line bg-[#EAF2F5] p-3">
+          <div className="grid grid-cols-4 gap-3">
+            <Field label="Date">
+              <input className="sf-input" type="date" value={paidOn} onChange={(e) => setPaidOn(e.target.value)} />
+            </Field>
+            <Field label="Financial year">
+              <select className="sf-input" value={fyId} onChange={(e) => setFyId(e.target.value)}>
+                <option value="">—</option>
+                {(fyQ.data ?? []).map((f: any) => <option key={f.id} value={f.id}>{f.label}{f.is_active ? " ★" : ""}</option>)}
+              </select>
+            </Field>
+            <Field label="Select">
+              <select className="sf-input" value={payeeType} onChange={(e) => { setPayeeType(e.target.value as any); setPayee(""); setSupplierId(""); setStaffId(""); setAccount(""); setBank(""); }}>
+                <option value="staff">Employee</option>
+                <option value="supplier">Supplier</option>
+                <option value="other">Other</option>
+              </select>
+            </Field>
+            <Field label="Voucher no.">
+              <input className="sf-input" value="Auto — on save" readOnly />
+            </Field>
+            <Field label="Name" className="col-span-3">
+              <input className="sf-input" value={payee} onChange={(e) => setPayee(e.target.value)} placeholder={payeeType === "staff" ? "Pick employee below" : payeeType === "supplier" ? "Pick supplier below" : "Payee name"} />
+            </Field>
+            <Field label="Account">
+              <input className="sf-input" value={account} onChange={(e) => setAccount(e.target.value)} placeholder="Bank A/C" />
+            </Field>
+          </div>
+        </div>
+
+        {payeeType === "staff" && (
+          <div className="mt-3 rounded-md border border-line">
+            <div className="flex items-center gap-2 border-b border-line bg-surface px-3 py-2">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-soft">Employee</span>
+              <input className="sf-input h-8 flex-1" placeholder="Type here to search…" value={staffSearch} onChange={(e) => setStaffSearch(e.target.value)} />
+            </div>
+            <div className="max-h-[220px] overflow-auto">
+              <table className="w-full text-[12px]">
+                <thead className="bg-surface text-[10.5px] uppercase tracking-wide text-ink-soft">
+                  <tr className="border-b border-line">
+                    <th className="px-2 py-1.5 text-left">Employee No</th>
+                    <th className="px-2 text-left">Name</th>
+                    <th className="px-2 text-left">ID Number</th>
+                    <th className="px-2 text-left">PIN No</th>
+                    <th className="px-2 text-left">Position</th>
+                    <th className="px-2 text-left">Employment Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStaff.map((s) => (
+                    <tr key={s.id} onClick={() => pickStaff(s)} className={`cursor-pointer border-b border-line hover:bg-[#F4F7E9] ${staffId === s.id ? "bg-[#E9F0D6]" : ""}`}>
+                      <td className="px-2 py-1.5 font-mono">{s.employee_no}</td>
+                      <td className="px-2 font-medium">{s.full_name}</td>
+                      <td className="px-2 font-mono">{s.national_id ?? "—"}</td>
+                      <td className="px-2 font-mono">{s.kra_pin ?? "—"}</td>
+                      <td className="px-2">{s.position ?? "—"}</td>
+                      <td className="px-2">{s.employment_date ?? "—"}</td>
+                    </tr>
+                  ))}
+                  {!filteredStaff.length && (
+                    <tr><td colSpan={6} className="py-6 text-center text-ink-soft">No employees match.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {payeeType === "supplier" && (
+          <div className="mt-3 rounded-md border border-line">
+            <div className="flex items-center gap-2 border-b border-line bg-surface px-3 py-2">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-soft">Supplier</span>
+              <input className="sf-input h-8 flex-1" placeholder="Type here to search…" value={supplierSearch} onChange={(e) => setSupplierSearch(e.target.value)} />
+            </div>
+            <div className="max-h-[220px] overflow-auto">
+              <table className="w-full text-[12px]">
+                <thead className="bg-surface text-[10.5px] uppercase tracking-wide text-ink-soft">
+                  <tr className="border-b border-line">
+                    <th className="px-2 py-1.5 text-left">Supplier No</th>
+                    <th className="px-2 text-left">Name</th>
+                    <th className="px-2 text-left">KRA PIN</th>
+                    <th className="px-2 text-left">Phone</th>
+                    <th className="px-2 text-left">Bank</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredSuppliers.map((s) => (
+                    <tr key={s.id} onClick={() => pickSupplier(s)} className={`cursor-pointer border-b border-line hover:bg-[#F4F7E9] ${supplierId === s.id ? "bg-[#E9F0D6]" : ""}`}>
+                      <td className="px-2 py-1.5 font-mono">{s.supplier_no ?? "—"}</td>
+                      <td className="px-2 font-medium">{s.name}</td>
+                      <td className="px-2 font-mono">{s.kra_pin ?? "—"}</td>
+                      <td className="px-2">{s.phone ?? "—"}</td>
+                      <td className="px-2">{s.bank_name ?? "—"}</td>
+                    </tr>
+                  ))}
+                  {!filteredSuppliers.length && (
+                    <tr><td colSpan={5} className="py-6 text-center text-ink-soft">No suppliers match.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-3 grid grid-cols-2 gap-3">
           <Field label="Fund">
             <select className="sf-input" value={fundId} onChange={(e) => { setFundId(e.target.value); setVoteHeadId(""); }}>
               <option value="">Select fund…</option>
@@ -273,67 +419,37 @@ function NewVoucherDialog({
               {filteredVH.map((v) => <option key={v.id} value={v.id}>{v.code} · {v.name}</option>)}
             </select>
           </Field>
-          <Field label="Payee type" className="col-span-2">
-            <div className="flex gap-3 text-[12px]">
-              {(["supplier", "staff", "other"] as const).map((t) => (
-                <label key={t} className="inline-flex items-center gap-1.5">
-                  <input type="radio" name="payeeType" checked={payeeType === t} onChange={() => { setPayeeType(t); setPayee(""); setSupplierId(""); setStaffId(""); }} />
-                  <span className="capitalize">{t}</span>
-                </label>
-              ))}
-            </div>
-          </Field>
-          {payeeType === "supplier" && (
-            <Field label="Supplier" className="col-span-2">
-              <select className="sf-input" value={supplierId} onChange={(e) => {
-                setSupplierId(e.target.value);
-                const s = (suppliersQ.data ?? []).find((x) => x.id === e.target.value);
-                if (s) { setPayee(s.name); setReference(s.bank_account ?? ""); }
-              }}>
-                <option value="">Choose supplier…</option>
-                {(suppliersQ.data ?? []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+        </div>
+
+        <div className="mt-3 rounded-md border border-line bg-[#EAF2F5] p-3">
+          <div className="grid grid-cols-4 gap-3">
+            <Field label="Payment Mode">
+              <select className="sf-input" value={method} onChange={(e) => setMethod(e.target.value as any)}>
+                {METHODS.map((m) => <option key={m} value={m} className="capitalize">{m.replace("_", " ")}</option>)}
               </select>
             </Field>
-          )}
-          {payeeType === "staff" && (
-            <Field label="Staff" className="col-span-2">
-              <select className="sf-input" value={staffId} onChange={(e) => {
-                setStaffId(e.target.value);
-                const s = (staffQ.data ?? []).find((x) => x.id === e.target.value);
-                if (s) { setPayee(s.full_name); setReference(s.bank_account ?? ""); }
-              }}>
-                <option value="">Choose staff…</option>
-                {(staffQ.data ?? []).map((s) => <option key={s.id} value={s.id}>{s.full_name} ({s.employee_no})</option>)}
-              </select>
+            <Field label="Cheque No">
+              <input className="sf-input" value={chequeNo} onChange={(e) => setChequeNo(e.target.value)} placeholder="CHQ-00421" />
             </Field>
-          )}
-          {payeeType === "other" && (
-            <Field label="Payee" className="col-span-2">
-              <input className="sf-input" value={payee} onChange={(e) => setPayee(e.target.value)} placeholder="Kenya Power & Lighting Co." />
+            <Field label="Account No">
+              <input className="sf-input" value={account} onChange={(e) => setAccount(e.target.value)} />
             </Field>
-          )}
-          <Field label="Amount (KES)">
-            <input className="sf-input" type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
-          </Field>
-          <Field label="Date">
-            <input className="sf-input" type="date" value={paidOn} onChange={(e) => setPaidOn(e.target.value)} />
-          </Field>
-          <Field label="Method">
-            <select className="sf-input" value={method} onChange={(e) => setMethod(e.target.value as any)}>
-              {METHODS.map((m) => <option key={m} value={m} className="capitalize">{m.replace("_", " ")}</option>)}
-            </select>
-          </Field>
-          <Field label="Reference / cheque no.">
-            <input className="sf-input" value={reference} onChange={(e) => setReference(e.target.value)} placeholder="CHQ-00421" />
-          </Field>
-          <Field label="Memo" className="col-span-2">
-            <textarea className="sf-input" rows={2} value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="June electricity bill" />
-          </Field>
-          <label className="col-span-2 flex items-center gap-2 text-[12.5px]">
+            <Field label="Bank">
+              <input className="sf-input" value={bank} onChange={(e) => setBank(e.target.value)} />
+            </Field>
+            <Field label="Total (KES)" className="col-span-2">
+              <input className="sf-input font-mono text-[15px]" type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
+            </Field>
+            <Field label="Memo" className="col-span-2">
+              <input className="sf-input" value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="June electricity bill" />
+            </Field>
+          </div>
+          <label className="mt-3 flex items-center gap-2 text-[12.5px]">
             <input type="checkbox" checked={payNow} onChange={(e) => setPayNow(e.target.checked)} />
             Mark as paid immediately (posts to cashbook & ledger)
           </label>
         </div>
+
         <DialogFooter>
           <button onClick={onClose} className="rounded-md border border-line-strong px-3 py-2 text-[13px]">Cancel</button>
           <button onClick={() => create.mutate()} disabled={disabled} className="rounded-md bg-forest px-4 py-2 text-[13px] font-medium text-white hover:bg-[#163F31] disabled:opacity-60">
