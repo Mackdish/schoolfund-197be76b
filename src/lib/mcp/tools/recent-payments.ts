@@ -20,7 +20,7 @@ export default defineTool({
     const { data, error } = await q;
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     const payments = (data ?? []).map((p) => {
-      const st = p.students as { full_name: string; admission_no: string } | null;
+      const st = p.students as unknown as { full_name: string; admission_no: string } | null;
       return {
         receipt_no: p.receipt_no, paid_on: p.paid_on, amount: Number(p.amount), method: p.method,
         status: p.status, payer_name: p.payer_name, reference: p.reference,
