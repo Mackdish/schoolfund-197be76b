@@ -9,110 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VouchersRouteImport } from './routes/vouchers'
-import { Route as SuppliersRouteImport } from './routes/suppliers'
-import { Route as StudentsRouteImport } from './routes/students'
-import { Route as StaffRouteImport } from './routes/staff'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ReportsRouteImport } from './routes/reports'
-import { Route as ReceiptingRouteImport } from './routes/receipting'
-import { Route as PromotionRouteImport } from './routes/promotion'
-import { Route as PayrollRouteImport } from './routes/payroll'
-import { Route as LedgerRouteImport } from './routes/ledger'
-import { Route as IpsasRouteImport } from './routes/ipsas'
-import { Route as ImportRouteImport } from './routes/import'
-import { Route as FundsRouteImport } from './routes/funds'
-import { Route as FeesRouteImport } from './routes/fees'
-import { Route as CashbookRouteImport } from './routes/cashbook'
-import { Route as BursaryRouteImport } from './routes/bursary'
-import { Route as BankRecRouteImport } from './routes/bank-rec'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BankRecRouteImport } from './routes/bank-rec'
+import { Route as BursaryRouteImport } from './routes/bursary'
+import { Route as CashbookRouteImport } from './routes/cashbook'
+import { Route as FeesRouteImport } from './routes/fees'
+import { Route as FundsRouteImport } from './routes/funds'
+import { Route as ImportRouteImport } from './routes/import'
+import { Route as IpsasRouteImport } from './routes/ipsas'
+import { Route as LedgerRouteImport } from './routes/ledger'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as PayrollRouteImport } from './routes/payroll'
+import { Route as PromotionRouteImport } from './routes/promotion'
+import { Route as ReceiptingRouteImport } from './routes/receipting'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as StaffRouteImport } from './routes/staff'
+import { Route as StudentsRouteImport } from './routes/students'
+import { Route as SuppliersRouteImport } from './routes/suppliers'
+import { Route as VouchersRouteImport } from './routes/vouchers'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as StudentsIdStatementRouteImport } from './routes/students.$id.statement'
 
-const VouchersRoute = VouchersRouteImport.update({
-  id: '/vouchers',
-  path: '/vouchers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SuppliersRoute = SuppliersRouteImport.update({
-  id: '/suppliers',
-  path: '/suppliers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentsRoute = StudentsRouteImport.update({
-  id: '/students',
-  path: '/students',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StaffRoute = StaffRouteImport.update({
-  id: '/staff',
-  path: '/staff',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportsRoute = ReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReceiptingRoute = ReceiptingRouteImport.update({
-  id: '/receipting',
-  path: '/receipting',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PromotionRoute = PromotionRouteImport.update({
-  id: '/promotion',
-  path: '/promotion',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PayrollRoute = PayrollRouteImport.update({
-  id: '/payroll',
-  path: '/payroll',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LedgerRoute = LedgerRouteImport.update({
-  id: '/ledger',
-  path: '/ledger',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IpsasRoute = IpsasRouteImport.update({
-  id: '/ipsas',
-  path: '/ipsas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ImportRoute = ImportRouteImport.update({
-  id: '/import',
-  path: '/import',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FundsRoute = FundsRouteImport.update({
-  id: '/funds',
-  path: '/funds',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeesRoute = FeesRouteImport.update({
-  id: '/fees',
-  path: '/fees',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CashbookRoute = CashbookRouteImport.update({
-  id: '/cashbook',
-  path: '/cashbook',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BursaryRoute = BursaryRouteImport.update({
-  id: '/bursary',
-  path: '/bursary',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BankRecRoute = BankRecRouteImport.update({
-  id: '/bank-rec',
-  path: '/bank-rec',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -120,9 +43,105 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BankRecRoute = BankRecRouteImport.update({
+  id: '/bank-rec',
+  path: '/bank-rec',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BursaryRoute = BursaryRouteImport.update({
+  id: '/bursary',
+  path: '/bursary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CashbookRoute = CashbookRouteImport.update({
+  id: '/cashbook',
+  path: '/cashbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeesRoute = FeesRouteImport.update({
+  id: '/fees',
+  path: '/fees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FundsRoute = FundsRouteImport.update({
+  id: '/funds',
+  path: '/funds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImportRoute = ImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IpsasRoute = IpsasRouteImport.update({
+  id: '/ipsas',
+  path: '/ipsas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LedgerRoute = LedgerRouteImport.update({
+  id: '/ledger',
+  path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayrollRoute = PayrollRouteImport.update({
+  id: '/payroll',
+  path: '/payroll',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PromotionRoute = PromotionRouteImport.update({
+  id: '/promotion',
+  path: '/promotion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReceiptingRoute = ReceiptingRouteImport.update({
+  id: '/receipting',
+  path: '/receipting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StaffRoute = StaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentsRoute = StudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuppliersRoute = SuppliersRouteImport.update({
+  id: '/suppliers',
+  path: '/suppliers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VouchersRoute = VouchersRouteImport.update({
+  id: '/vouchers',
+  path: '/vouchers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StudentsIdStatementRoute = StudentsIdStatementRouteImport.update({
@@ -142,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/import': typeof ImportRoute
   '/ipsas': typeof IpsasRoute
   '/ledger': typeof LedgerRoute
+  '/mcp': typeof McpRoute
   '/payroll': typeof PayrollRoute
   '/promotion': typeof PromotionRoute
   '/receipting': typeof ReceiptingRoute
@@ -151,6 +171,8 @@ export interface FileRoutesByFullPath {
   '/students': typeof StudentsRouteWithChildren
   '/suppliers': typeof SuppliersRoute
   '/vouchers': typeof VouchersRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/students/$id/statement': typeof StudentsIdStatementRoute
 }
 export interface FileRoutesByTo {
@@ -164,6 +186,7 @@ export interface FileRoutesByTo {
   '/import': typeof ImportRoute
   '/ipsas': typeof IpsasRoute
   '/ledger': typeof LedgerRoute
+  '/mcp': typeof McpRoute
   '/payroll': typeof PayrollRoute
   '/promotion': typeof PromotionRoute
   '/receipting': typeof ReceiptingRoute
@@ -173,6 +196,8 @@ export interface FileRoutesByTo {
   '/students': typeof StudentsRouteWithChildren
   '/suppliers': typeof SuppliersRoute
   '/vouchers': typeof VouchersRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/students/$id/statement': typeof StudentsIdStatementRoute
 }
 export interface FileRoutesById {
@@ -187,6 +212,7 @@ export interface FileRoutesById {
   '/import': typeof ImportRoute
   '/ipsas': typeof IpsasRoute
   '/ledger': typeof LedgerRoute
+  '/mcp': typeof McpRoute
   '/payroll': typeof PayrollRoute
   '/promotion': typeof PromotionRoute
   '/receipting': typeof ReceiptingRoute
@@ -196,6 +222,8 @@ export interface FileRoutesById {
   '/students': typeof StudentsRouteWithChildren
   '/suppliers': typeof SuppliersRoute
   '/vouchers': typeof VouchersRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/students/$id/statement': typeof StudentsIdStatementRoute
 }
 export interface FileRouteTypes {
@@ -211,6 +239,7 @@ export interface FileRouteTypes {
     | '/import'
     | '/ipsas'
     | '/ledger'
+    | '/mcp'
     | '/payroll'
     | '/promotion'
     | '/receipting'
@@ -220,6 +249,8 @@ export interface FileRouteTypes {
     | '/students'
     | '/suppliers'
     | '/vouchers'
+    | '/.well-known/oauth-protected-resource'
+    | '/.lovable/oauth/consent'
     | '/students/$id/statement'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -233,6 +264,7 @@ export interface FileRouteTypes {
     | '/import'
     | '/ipsas'
     | '/ledger'
+    | '/mcp'
     | '/payroll'
     | '/promotion'
     | '/receipting'
@@ -242,6 +274,8 @@ export interface FileRouteTypes {
     | '/students'
     | '/suppliers'
     | '/vouchers'
+    | '/.well-known/oauth-protected-resource'
+    | '/.lovable/oauth/consent'
     | '/students/$id/statement'
   id:
     | '__root__'
@@ -255,6 +289,7 @@ export interface FileRouteTypes {
     | '/import'
     | '/ipsas'
     | '/ledger'
+    | '/mcp'
     | '/payroll'
     | '/promotion'
     | '/receipting'
@@ -264,6 +299,8 @@ export interface FileRouteTypes {
     | '/students'
     | '/suppliers'
     | '/vouchers'
+    | '/.well-known/oauth-protected-resource'
+    | '/.lovable/oauth/consent'
     | '/students/$id/statement'
   fileRoutesById: FileRoutesById
 }
@@ -278,6 +315,7 @@ export interface RootRouteChildren {
   ImportRoute: typeof ImportRoute
   IpsasRoute: typeof IpsasRoute
   LedgerRoute: typeof LedgerRoute
+  McpRoute: typeof McpRoute
   PayrollRoute: typeof PayrollRoute
   PromotionRoute: typeof PromotionRoute
   ReceiptingRoute: typeof ReceiptingRoute
@@ -287,127 +325,17 @@ export interface RootRouteChildren {
   StudentsRoute: typeof StudentsRouteWithChildren
   SuppliersRoute: typeof SuppliersRoute
   VouchersRoute: typeof VouchersRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/vouchers': {
-      id: '/vouchers'
-      path: '/vouchers'
-      fullPath: '/vouchers'
-      preLoaderRoute: typeof VouchersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/suppliers': {
-      id: '/suppliers'
-      path: '/suppliers'
-      fullPath: '/suppliers'
-      preLoaderRoute: typeof SuppliersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/students': {
-      id: '/students'
-      path: '/students'
-      fullPath: '/students'
-      preLoaderRoute: typeof StudentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/staff': {
-      id: '/staff'
-      path: '/staff'
-      fullPath: '/staff'
-      preLoaderRoute: typeof StaffRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reports': {
-      id: '/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof ReportsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/receipting': {
-      id: '/receipting'
-      path: '/receipting'
-      fullPath: '/receipting'
-      preLoaderRoute: typeof ReceiptingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/promotion': {
-      id: '/promotion'
-      path: '/promotion'
-      fullPath: '/promotion'
-      preLoaderRoute: typeof PromotionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/payroll': {
-      id: '/payroll'
-      path: '/payroll'
-      fullPath: '/payroll'
-      preLoaderRoute: typeof PayrollRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ledger': {
-      id: '/ledger'
-      path: '/ledger'
-      fullPath: '/ledger'
-      preLoaderRoute: typeof LedgerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ipsas': {
-      id: '/ipsas'
-      path: '/ipsas'
-      fullPath: '/ipsas'
-      preLoaderRoute: typeof IpsasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/import': {
-      id: '/import'
-      path: '/import'
-      fullPath: '/import'
-      preLoaderRoute: typeof ImportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/funds': {
-      id: '/funds'
-      path: '/funds'
-      fullPath: '/funds'
-      preLoaderRoute: typeof FundsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fees': {
-      id: '/fees'
-      path: '/fees'
-      fullPath: '/fees'
-      preLoaderRoute: typeof FeesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cashbook': {
-      id: '/cashbook'
-      path: '/cashbook'
-      fullPath: '/cashbook'
-      preLoaderRoute: typeof CashbookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bursary': {
-      id: '/bursary'
-      path: '/bursary'
-      fullPath: '/bursary'
-      preLoaderRoute: typeof BursaryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bank-rec': {
-      id: '/bank-rec'
-      path: '/bank-rec'
-      fullPath: '/bank-rec'
-      preLoaderRoute: typeof BankRecRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -417,11 +345,144 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/bank-rec': {
+      id: '/bank-rec'
+      path: '/bank-rec'
+      fullPath: '/bank-rec'
+      preLoaderRoute: typeof BankRecRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bursary': {
+      id: '/bursary'
+      path: '/bursary'
+      fullPath: '/bursary'
+      preLoaderRoute: typeof BursaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cashbook': {
+      id: '/cashbook'
+      path: '/cashbook'
+      fullPath: '/cashbook'
+      preLoaderRoute: typeof CashbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fees': {
+      id: '/fees'
+      path: '/fees'
+      fullPath: '/fees'
+      preLoaderRoute: typeof FeesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/funds': {
+      id: '/funds'
+      path: '/funds'
+      fullPath: '/funds'
+      preLoaderRoute: typeof FundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/import': {
+      id: '/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof ImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ipsas': {
+      id: '/ipsas'
+      path: '/ipsas'
+      fullPath: '/ipsas'
+      preLoaderRoute: typeof IpsasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ledger': {
+      id: '/ledger'
+      path: '/ledger'
+      fullPath: '/ledger'
+      preLoaderRoute: typeof LedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payroll': {
+      id: '/payroll'
+      path: '/payroll'
+      fullPath: '/payroll'
+      preLoaderRoute: typeof PayrollRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/promotion': {
+      id: '/promotion'
+      path: '/promotion'
+      fullPath: '/promotion'
+      preLoaderRoute: typeof PromotionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/receipting': {
+      id: '/receipting'
+      path: '/receipting'
+      fullPath: '/receipting'
+      preLoaderRoute: typeof ReceiptingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staff': {
+      id: '/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof StaffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/students': {
+      id: '/students'
+      path: '/students'
+      fullPath: '/students'
+      preLoaderRoute: typeof StudentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/suppliers': {
+      id: '/suppliers'
+      path: '/suppliers'
+      fullPath: '/suppliers'
+      preLoaderRoute: typeof SuppliersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vouchers': {
+      id: '/vouchers'
+      path: '/vouchers'
+      fullPath: '/vouchers'
+      preLoaderRoute: typeof VouchersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/students/$id/statement': {
@@ -457,6 +518,7 @@ const rootRouteChildren: RootRouteChildren = {
   ImportRoute: ImportRoute,
   IpsasRoute: IpsasRoute,
   LedgerRoute: LedgerRoute,
+  McpRoute: McpRoute,
   PayrollRoute: PayrollRoute,
   PromotionRoute: PromotionRoute,
   ReceiptingRoute: ReceiptingRoute,
@@ -466,6 +528,9 @@ const rootRouteChildren: RootRouteChildren = {
   StudentsRoute: StudentsRouteWithChildren,
   SuppliersRoute: SuppliersRoute,
   VouchersRoute: VouchersRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
