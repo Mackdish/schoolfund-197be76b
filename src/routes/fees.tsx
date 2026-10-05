@@ -12,7 +12,7 @@ import { kes } from "@/lib/money";
 import { FileText, Wand2 } from "lucide-react";
 
 export const Route = createFileRoute("/fees")({
-  head: () => ({ meta: [{ title: "Fee collection — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Fee collection — EduTech" }] }),
   component: () => <AppShell><FeesPage /></AppShell>,
 });
 
@@ -328,7 +328,7 @@ function GenerateTab({ schoolId }: { schoolId: string }) {
         </button>
       </div>
       <p className="mt-4 text-[12.5px] text-ink-soft max-w-[640px]">
-        For each active student in the selection, SomaFin will create one term invoice using the saved fee structure (matched by class and boarder status).
+        For each active student in the selection, EduTech will create one term invoice using the saved fee structure (matched by class and boarder status).
         Students already invoiced for this term are skipped.
       </p>
 

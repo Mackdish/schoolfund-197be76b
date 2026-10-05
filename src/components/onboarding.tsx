@@ -102,7 +102,7 @@ export function OnboardingWizard() {
         console.warn("Demo seed skipped:", seedErr);
       }
 
-      toast.success("School ready with sample data. Welcome to SomaFin.");
+      toast.success("School ready with sample data. Welcome to EduTech.");
       await refresh();
     } catch (err: any) {
       toast.error(err.message ?? "Setup failed");
@@ -116,7 +116,7 @@ export function OnboardingWizard() {
       <div className="w-full max-w-[520px]">
         <div className="mb-7 text-center">
           <div className="sf-seal mx-auto flex h-12 w-12 items-center justify-center">
-            <span className="font-serif text-base font-semibold text-brass">SF</span>
+            <span className="font-serif text-base font-semibold text-brass">ET</span>
           </div>
           <h1 className="mt-4 font-serif text-[24px]">Set up your school</h1>
           <p className="mt-1 text-[12.5px] text-ink-soft">

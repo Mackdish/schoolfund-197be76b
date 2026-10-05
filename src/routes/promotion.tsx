@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { ArrowRight, CheckCircle2, GraduationCap, HandCoins, Wallet } from "lucide-react";
 
 export const Route = createFileRoute("/promotion")({
-  head: () => ({ meta: [{ title: "Promotion — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Promotion — EduTech" }] }),
   component: () => (
     <AppShell>
       <PromotionPage />

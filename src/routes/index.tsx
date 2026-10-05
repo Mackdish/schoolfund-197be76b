@@ -25,13 +25,13 @@ import { kes } from "@/lib/money";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SomaFin — Treasury Dashboard" },
+      { title: "EduTech — Treasury Dashboard" },
       {
         name: "description",
         content:
           "Treasury dashboard for Kenyan secondary schools — three statutory funds at a glance.",
       },
-      { property: "og:title", content: "SomaFin — Treasury Dashboard" },
+      { property: "og:title", content: "EduTech — Treasury Dashboard" },
       {
         property: "og:description",
         content:

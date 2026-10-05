@@ -10,7 +10,7 @@ import { Download, Upload, CheckCircle2, AlertCircle, FileSpreadsheet } from "lu
 import { downloadTemplate, parseFile, downloadErrorReport, type EntityKind } from "@/lib/import-templates";
 
 export const Route = createFileRoute("/import")({
-  head: () => ({ meta: [{ title: "Bulk import — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Bulk import — EduTech" }] }),
   component: () => <AppShell><ImportPage /></AppShell>,
 });
 

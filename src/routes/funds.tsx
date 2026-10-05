@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Landmark, Save } from "lucide-react";
 
 export const Route = createFileRoute("/funds")({
-  head: () => ({ meta: [{ title: "Fund accounts — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Fund accounts — EduTech" }] }),
   component: () => (
     <AppShell>
       <FundsPage />

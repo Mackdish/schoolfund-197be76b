@@ -10,7 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, Trash2, CheckCircle2, Save, Upload, Image as ImageIcon } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Settings — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Settings — EduTech" }] }),
   component: () => (
     <AppShell>
       <SettingsPage />
@@ -592,7 +592,7 @@ function UsersTab({ schoolId, canEdit }: { schoolId: string; canEdit: boolean })
     <>
       {canEdit && (
         <Panel title="Grant role">
-          <p className="mb-3 text-[11.5px] text-ink-soft">The user must already have a SomaFin account. Enter their sign-in email and pick a role for this school.</p>
+          <p className="mb-3 text-[11.5px] text-ink-soft">The user must already have a EduTech account. Enter their sign-in email and pick a role for this school.</p>
           <div className="grid grid-cols-5 gap-3">
             <F label="Email" className="col-span-3"><input className="sf-input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="bursar@school.ke" /></F>
             <F label="Role">

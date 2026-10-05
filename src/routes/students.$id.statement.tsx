@@ -9,7 +9,7 @@ import { FileText, ArrowLeft } from "lucide-react";
 import { downloadStatementPdf, type StatementData } from "@/lib/statement-pdf";
 
 export const Route = createFileRoute("/students/$id/statement")({
-  head: () => ({ meta: [{ title: "Fee statement — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Fee statement — EduTech" }] }),
   component: () => <AppShell><StatementPage /></AppShell>,
 });
 

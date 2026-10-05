@@ -83,7 +83,7 @@ export async function generateReceiptPdf(p: Receipt, school: SchoolBranding): Pr
   doc.setFont("times", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...BRASS);
-  doc.text("SF", right - 22, y + 18, { align: "center" });
+  doc.text("ET", right - 22, y + 18, { align: "center" });
 
   y += 70;
 

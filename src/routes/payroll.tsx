@@ -12,7 +12,7 @@ import { Plus, FileText, Send, Trash2, Pencil } from "lucide-react";
 import { downloadPayslipPdf } from "@/lib/payslip-pdf";
 
 export const Route = createFileRoute("/payroll")({
-  head: () => ({ meta: [{ title: "Payroll — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Payroll — EduTech" }] }),
   component: () => <AppShell><PayrollPage /></AppShell>,
 });
 

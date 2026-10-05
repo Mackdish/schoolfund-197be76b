@@ -10,7 +10,7 @@ import { exportReportPdf, exportReportXlsx, type ReportDoc } from "@/lib/exporte
 import { FileDown, FileSpreadsheet } from "lucide-react";
 
 export const Route = createFileRoute("/reports")({
-  head: () => ({ meta: [{ title: "Statutory reports — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Statutory reports — EduTech" }] }),
   component: () => (
     <AppShell>
       <ReportsPage />

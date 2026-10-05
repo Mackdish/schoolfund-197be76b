@@ -45,7 +45,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  /* SomaFin treasury palette */
+  /* EduTech treasury palette */
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-paper: var(--paper);
@@ -102,7 +102,7 @@
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
 
-  /* SomaFin tokens */
+  /* EduTech tokens */
   --ink: #122019;
   --ink-soft: #3A4A41;
   --paper: #F6F4EE;
@@ -179,7 +179,7 @@
   }
 }
 
-/* SomaFin signature components */
+/* EduTech signature components */
 @layer components {
   .sf-stub-perf {
     position: relative;

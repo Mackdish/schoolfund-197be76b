@@ -6,7 +6,7 @@ type BIPEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
-const DISMISS_KEY = "somafin.install.dismissed";
+const DISMISS_KEY = "edutech.install.dismissed";
 
 function isStandalone() {
   if (typeof window === "undefined") return false;
@@ -85,14 +85,14 @@ export function InstallPrompt() {
     <div className="fixed bottom-5 right-5 z-50 w-[340px] rounded-lg border border-line bg-surface shadow-[0_10px_30px_-12px_rgba(0,0,0,0.35)] animate-in fade-in slide-in-from-bottom-3">
       <div className="flex items-start gap-3 p-4">
         <div className="sf-seal flex h-10 w-10 flex-none items-center justify-center">
-          <span className="font-serif text-sm font-semibold text-brass">SF</span>
+          <span className="font-serif text-sm font-semibold text-brass">ET</span>
         </div>
         <div className="flex-1">
-          <div className="font-serif text-[15px] text-ink">Install SomaFin</div>
+          <div className="font-serif text-[15px] text-ink">Install EduTech</div>
           <p className="mt-1 text-[12px] leading-snug text-ink-soft">
             {iosHint
-              ? "Tap the Share icon in Safari and choose “Add to Home Screen” to install SomaFin as an app."
-              : "Install SomaFin on this device for one-tap access, full-screen mode, and a dedicated app icon."}
+              ? "Tap the Share icon in Safari and choose “Add to Home Screen” to install EduTech as an app."
+              : "Install EduTech on this device for one-tap access, full-screen mode, and a dedicated app icon."}
           </p>
           <div className="mt-3 flex items-center gap-2">
             {!iosHint && (

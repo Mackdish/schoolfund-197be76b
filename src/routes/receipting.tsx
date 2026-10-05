@@ -12,7 +12,7 @@ import { Check, Receipt, Download, Printer, FileText } from "lucide-react";
 import { downloadReceiptPdf } from "@/lib/receipt-pdf";
 
 export const Route = createFileRoute("/receipting")({
-  head: () => ({ meta: [{ title: "Receipting — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Receipting — EduTech" }] }),
   component: () => <AppShell><ReceiptingPage /></AppShell>,
 });
 
@@ -368,7 +368,7 @@ function receiptHtml(p: any, school: any) {
   @media print { body{padding:0} .wrap{border:none} }
 </style></head><body>
 <div class="wrap">
-  <div class="seal">SF</div>
+  <div class="seal">ET</div>
   <h1>${esc(school?.name ?? "School")}</h1>
   <div class="meta">${esc(school?.address ?? "")}${school?.phone ? " · " + esc(school.phone) : ""}${school?.code ? " · Reg " + esc(school.code) : ""}</div>
   <h2>Official Receipt</h2>

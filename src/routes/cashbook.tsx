@@ -9,7 +9,7 @@ import { kes } from "@/lib/money";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/cashbook")({
-  head: () => ({ meta: [{ title: "Cashbook — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Cashbook — EduTech" }] }),
   component: () => (
     <AppShell>
       <CashbookPage />

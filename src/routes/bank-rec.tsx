@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Upload, Wand2, Link2, Link2Off, FileSpreadsheet } from "lucide-react";
 
 export const Route = createFileRoute("/bank-rec")({
-  head: () => ({ meta: [{ title: "Bank reconciliation — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Bank reconciliation — EduTech" }] }),
   component: () => (
     <AppShell>
       <BankRecPage />
