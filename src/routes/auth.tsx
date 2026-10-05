@@ -6,12 +6,16 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — EduTech" }] }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
+  }),
   component: AuthPage,
 });
 
 function AuthPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,8 +23,11 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/", replace: true });
-  }, [loading, user, navigate]);
+    if (!loading && user) {
+      if (next) window.location.assign(next);
+      else navigate({ to: "/", replace: true });
+    }
+  }, [loading, user, navigate, next]);
 
 
   const submit = async (e: React.FormEvent) => {
