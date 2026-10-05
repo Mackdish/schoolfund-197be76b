@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Sign in — EduTech" }] }),
   component: AuthPage,
 });
 
@@ -63,7 +63,7 @@ function AuthPage() {
             <span className="font-serif text-base font-semibold text-brass">SF</span>
           </div>
           <div>
-            <h1 className="font-serif text-[22px]">SomaFin</h1>
+            <h1 className="font-serif text-[22px]">EduTech</h1>
             <p className="text-[11.5px] uppercase tracking-[0.1em] text-ink-soft">Treasury for schools</p>
           </div>
         </div>

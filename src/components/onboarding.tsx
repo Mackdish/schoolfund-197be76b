@@ -102,7 +102,7 @@ export function OnboardingWizard() {
         console.warn("Demo seed skipped:", seedErr);
       }
 
-      toast.success("School ready with sample data. Welcome to SomaFin.");
+      toast.success("School ready with sample data. Welcome to EduTech.");
       await refresh();
     } catch (err: any) {
       toast.error(err.message ?? "Setup failed");

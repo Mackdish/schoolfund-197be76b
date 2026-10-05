@@ -83,7 +83,7 @@ function Shell({ pathname, school, profile, signOut, children }: any) {
             <span className="font-serif text-sm font-semibold text-brass">SF</span>
           </div>
           <div>
-            <h1 className="text-[19px] text-white">SomaFin</h1>
+            <h1 className="text-[19px] text-white">EduTech</h1>
             <p className="mt-0.5 text-[10.5px] uppercase tracking-[0.09em] text-[#7E8E85]">Treasury for schools</p>
           </div>
         </div>

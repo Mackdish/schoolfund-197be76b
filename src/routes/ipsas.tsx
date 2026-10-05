@@ -12,7 +12,7 @@ import { downloadIpsasPdf, type IpsasPayload } from "@/lib/ipsas-pdf";
 import { downloadIpsasExcel } from "@/lib/ipsas-excel";
 
 export const Route = createFileRoute("/ipsas")({
-  head: () => ({ meta: [{ title: "IPSAS reports — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "IPSAS reports — EduTech" }] }),
   component: () => <AppShell><IpsasPage /></AppShell>,
 });
 

@@ -11,7 +11,7 @@ import { kes } from "@/lib/money";
 import { Plus, CheckCircle2, FileText, Printer } from "lucide-react";
 
 export const Route = createFileRoute("/vouchers")({
-  head: () => ({ meta: [{ title: "Payment vouchers — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Payment vouchers — EduTech" }] }),
   component: () => <AppShell><VouchersPage /></AppShell>,
 });
 

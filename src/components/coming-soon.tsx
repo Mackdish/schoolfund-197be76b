@@ -23,7 +23,7 @@ export function ComingSoon({
           <div>
             <div className="font-serif text-lg">Scheduled for {phase}</div>
             <p className="mt-1 max-w-[520px] text-[13px] text-ink-soft">
-              This screen is part of the SomaFin build roadmap. The Phase 1 foundation
+              This screen is part of the EduTech build roadmap. The Phase 1 foundation
               (design system, app shell, and treasury dashboard) is in place; this page
               will be wired against the Supabase schema in the named phase.
             </p>

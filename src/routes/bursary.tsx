@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
 
 export const Route = createFileRoute("/bursary")({
-  head: () => ({ meta: [{ title: "Bursaries · capitation — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Bursaries · capitation — EduTech" }] }),
   component: () => (
     <AppShell>
       <BursaryPage />

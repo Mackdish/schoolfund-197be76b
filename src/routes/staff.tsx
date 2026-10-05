@@ -11,7 +11,7 @@ import { kes } from "@/lib/money";
 import { Plus, Pencil, Trash2, Users } from "lucide-react";
 
 export const Route = createFileRoute("/staff")({
-  head: () => ({ meta: [{ title: "Staff — SomaFin" }] }),
+  head: () => ({ meta: [{ title: "Staff — EduTech" }] }),
   component: () => <AppShell><StaffPage /></AppShell>,
 });
 
