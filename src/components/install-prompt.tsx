@@ -85,7 +85,7 @@ export function InstallPrompt() {
     <div className="fixed bottom-5 right-5 z-50 w-[340px] rounded-lg border border-line bg-surface shadow-[0_10px_30px_-12px_rgba(0,0,0,0.35)] animate-in fade-in slide-in-from-bottom-3">
       <div className="flex items-start gap-3 p-4">
         <div className="sf-seal flex h-10 w-10 flex-none items-center justify-center">
-          <span className="font-serif text-sm font-semibold text-brass">SF</span>
+          <span className="font-serif text-sm font-semibold text-brass">ET</span>
         </div>
         <div className="flex-1">
           <div className="font-serif text-[15px] text-ink">Install EduTech</div>

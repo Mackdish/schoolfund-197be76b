@@ -60,7 +60,7 @@ function AuthPage() {
       <div className="w-full max-w-[420px]">
         <div className="mb-7 flex items-center gap-3">
           <div className="sf-seal flex h-10 w-10 items-center justify-center">
-            <span className="font-serif text-base font-semibold text-brass">SF</span>
+            <span className="font-serif text-base font-semibold text-brass">ET</span>
           </div>
           <div>
             <h1 className="font-serif text-[22px]">EduTech</h1>
