@@ -18,7 +18,7 @@ export function ComingSoon({
       <Panel>
         <div className="flex items-center gap-4 py-8">
           <div className="sf-seal flex h-14 w-14 flex-none items-center justify-center">
-            <span className="font-serif text-base font-semibold text-brass">SF</span>
+            <span className="font-serif text-base font-semibold text-brass">ET</span>
           </div>
           <div>
             <div className="font-serif text-lg">Scheduled for {phase}</div>

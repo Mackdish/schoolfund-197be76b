@@ -80,7 +80,7 @@ function Shell({ pathname, school, profile, signOut, children }: any) {
       <aside className="sf-no-print relative flex flex-col bg-ink text-[#D9DFD9]">
         <div className="flex items-center gap-3 px-6 pt-7 pb-5">
           <div className="sf-seal flex h-9 w-9 flex-none items-center justify-center">
-            <span className="font-serif text-sm font-semibold text-brass">SF</span>
+            <span className="font-serif text-sm font-semibold text-brass">ET</span>
           </div>
           <div>
             <h1 className="text-[19px] text-white">EduTech</h1>
