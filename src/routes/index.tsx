@@ -32,6 +32,8 @@ export const Route = createFileRoute("/")({
           "Treasury dashboard for Kenyan secondary schools — three statutory funds at a glance.",
       },
       { property: "og:title", content: "EduTech — Treasury Dashboard" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       {
         property: "og:description",
         content:
