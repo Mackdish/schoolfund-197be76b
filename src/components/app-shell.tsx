@@ -1,16 +1,18 @@
 import { Link, useRouterState, useNavigate, Navigate } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   LayoutDashboard, Users, CreditCard, Wallet, BookOpen, BookText,
   Receipt, ArrowRight, HandCoins, FileBarChart, Plus, Building2,
   Settings as SettingsIcon, UserCog, LogOut, Landmark, FileSignature,
-  ScrollText, Truck, Briefcase, Upload,
+  ScrollText, Truck, Briefcase, Upload, Menu,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { OnboardingWizard } from "@/components/onboarding";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { InstallPrompt } from "@/components/install-prompt";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -64,6 +66,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function Shell({ pathname, school, profile, signOut, children }: any) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const initials = (profile?.full_name || profile?.email || "?")
     .split(/\s+/).filter(Boolean).slice(0, 2).map((w: string) => w[0]?.toUpperCase()).join("");
 
@@ -75,9 +78,8 @@ function Shell({ pathname, school, profile, signOut, children }: any) {
     },
   });
 
-  return (
-    <div className="grid min-h-screen grid-cols-[236px_1fr] bg-paper">
-      <aside className="sf-no-print relative flex flex-col bg-ink text-[#D9DFD9]">
+  const navigation = (
+      <div className="flex min-h-full flex-col bg-sidebar text-sidebar-foreground">
         <div className="flex items-center gap-3 px-6 pt-7 pb-5">
           <div className="sf-seal flex h-9 w-9 flex-none items-center justify-center">
             <span className="font-serif text-sm font-semibold text-brass">ET</span>
@@ -93,7 +95,7 @@ function Shell({ pathname, school, profile, signOut, children }: any) {
             const active = pathname === item.to;
             const Icon = item.icon;
             return (
-              <Link key={item.to} to={item.to}
+              <Link key={item.to} to={item.to} onClick={() => setMenuOpen(false)} aria-current={active ? "page" : undefined}
                 className={`relative flex items-center gap-3 rounded-md px-3 py-2.5 text-[13.6px] transition-colors ${active ? "bg-[rgba(184,146,79,0.13)] text-white" : "text-[#B7C1B9] hover:bg-white/5 hover:text-[#EDF1EC]"}`}>
                 {active && <span className="absolute -left-3.5 top-2 bottom-2 w-[3px] rounded-r bg-brass" />}
                 <Icon className="h-[17px] w-[17px] flex-none opacity-85" />
@@ -106,7 +108,7 @@ function Shell({ pathname, school, profile, signOut, children }: any) {
         <div className="px-3 pt-4 pb-1.5 text-[10px] uppercase tracking-[0.1em] text-[#6E7E73]">Quick actions</div>
         <nav className="flex flex-col gap-px px-3.5">
           {quickActions.map((item) => (
-            <Link key={item.label} to={item.to}
+            <Link key={item.label} to={item.to} onClick={() => setMenuOpen(false)}
               className="flex items-center gap-3 rounded-md px-3 py-2 text-[12.8px] text-[#B7C1B9] hover:bg-white/5 hover:text-[#EDF1EC]">
               <Plus className="h-3.5 w-3.5 flex-none opacity-85" />
               {item.label}
@@ -119,7 +121,7 @@ function Shell({ pathname, school, profile, signOut, children }: any) {
           {settingsItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Link key={item.label} to={item.to}
+              <Link key={item.label} to={item.to} onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 rounded-md px-3 py-2 text-[13.6px] text-[#B7C1B9] hover:bg-white/5 hover:text-[#EDF1EC]">
                 <Icon className="h-[17px] w-[17px] flex-none opacity-85" />
                 {item.label}
@@ -136,35 +138,55 @@ function Shell({ pathname, school, profile, signOut, children }: any) {
             IPSAS cash basis · audit log active
           </div>
         </div>
-      </aside>
+      </div>
+  );
+
+  return (
+    <div className="sf-app-shell grid min-h-dvh grid-cols-[minmax(0,1fr)] bg-paper lg:grid-cols-[236px_minmax(0,1fr)]">
+      <aside className="sf-no-print hidden bg-sidebar lg:block">{navigation}</aside>
 
       <main className="min-w-0">
-        <header className="sf-no-print flex h-[68px] items-center justify-between border-b border-line bg-surface px-8">
-          <div>
-            <div className="font-serif text-base">{school.name}</div>
+        <header className="sf-no-print grid min-h-[68px] grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-line bg-surface px-3 py-2 sm:px-6 lg:px-8">
+          <div className="flex min-w-0 items-center gap-2">
+            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Open navigation" className="h-11 w-11 shrink-0 lg:hidden"><Menu /></Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="sf-mobile-nav w-[min(320px,88vw)] overflow-y-auto border-sidebar-border bg-sidebar p-0 text-sidebar-foreground" aria-describedby={undefined}>
+                <SheetTitle className="sr-only">EduTech navigation</SheetTitle>
+                {navigation}
+              </SheetContent>
+            </Sheet>
+            <div className="min-w-0">
+            <div className="truncate font-serif text-sm sm:text-base" title={school.name}>{school.name}</div>
             <div className="mt-0.5 text-[11.5px] text-ink-soft">
               Bursar console{activeTerm ? ` · Term ${activeTerm.term}, ${activeTerm.year}` : " · No active term"}
             </div>
+            </div>
           </div>
-          <div className="flex items-center gap-3.5">
-            <Link to="/fees" className="rounded-md border border-line-strong bg-surface px-3 py-2 text-[13px] font-medium hover:bg-paper">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-3.5">
+            <Button asChild variant="outline" className="hidden lg:inline-flex">
+            <Link to="/fees">
               Generate invoice
             </Link>
-            <Link to="/receipting" className="rounded-md border border-forest bg-forest px-3 py-2 text-[13px] font-medium text-white hover:bg-[#163F31]">
-              Record payment
+            </Button>
+            <Button asChild className="h-11 px-2 text-xs sm:px-3 sm:text-[13px]">
+            <Link to="/receipting" aria-label="Record payment">
+              <Receipt className="shrink-0" /><span className="hidden sm:inline">Record payment</span><span className="sm:hidden">Pay</span>
             </Link>
+            </Button>
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-forest-light font-serif text-xs font-semibold text-forest">
+              <div className="hidden h-8 w-8 items-center justify-center rounded-full bg-forest-light font-serif text-xs font-semibold text-forest sm:flex">
                 {initials || "?"}
               </div>
-              <button onClick={signOut} title="Sign out" className="text-ink-soft hover:text-ink">
+              <Button variant="ghost" size="icon" onClick={signOut} title="Sign out" aria-label="Sign out" className="h-11 w-11 text-ink-soft hover:text-ink">
                 <LogOut className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           </div>
         </header>
 
-        <div className="sf-print-area sf-fade max-w-[1180px] px-8 pt-7 pb-16">
+        <div className="sf-content sf-print-area sf-fade min-w-0 max-w-[1180px] px-3 pt-5 pb-16 sm:px-6 lg:px-8 lg:pt-7">
           {children}
         </div>
       </main>
