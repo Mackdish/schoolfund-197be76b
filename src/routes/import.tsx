@@ -10,7 +10,14 @@ import { Download, Upload, CheckCircle2, AlertCircle, FileSpreadsheet } from "lu
 import { downloadTemplate, parseFile, downloadErrorReport, type EntityKind } from "@/lib/import-templates";
 
 export const Route = createFileRoute("/import")({
-  head: () => ({ meta: [{ title: "Bulk import — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Bulk import — EduTech" },
+    { name: "description", content: "Import school students, staff, suppliers and financial records into EduTech." },
+    { property: "og:title", content: "Bulk import — EduTech" },
+    { property: "og:description", content: "Import school students, staff, suppliers and financial records into EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => <AppShell><ImportPage /></AppShell>,
 });
 

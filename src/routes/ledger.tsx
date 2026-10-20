@@ -16,7 +16,14 @@ import {
 import { BookOpen, Scale } from "lucide-react";
 
 export const Route = createFileRoute("/ledger")({
-  head: () => ({ meta: [{ title: "General ledger — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "General ledger — EduTech" },
+    { name: "description", content: "Review school journal entries and account balances in the EduTech general ledger." },
+    { property: "og:title", content: "General ledger — EduTech" },
+    { property: "og:description", content: "Review school journal entries and account balances in the EduTech general ledger." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => (
     <AppShell>
       <LedgerPage />

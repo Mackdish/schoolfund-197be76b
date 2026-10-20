@@ -11,7 +11,14 @@ import { kes } from "@/lib/money";
 import { Plus, Pencil, Trash2, FileText, Users } from "lucide-react";
 
 export const Route = createFileRoute("/suppliers")({
-  head: () => ({ meta: [{ title: "Suppliers — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Suppliers — EduTech" },
+    { name: "description", content: "Manage school suppliers, payment history and balances in EduTech." },
+    { property: "og:title", content: "Suppliers — EduTech" },
+    { property: "og:description", content: "Manage school suppliers, payment history and balances in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => <AppShell><SuppliersPage /></AppShell>,
 });
 

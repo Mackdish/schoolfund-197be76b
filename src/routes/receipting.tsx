@@ -12,7 +12,14 @@ import { Check, Receipt, Download, Printer, FileText } from "lucide-react";
 import { downloadReceiptPdf } from "@/lib/receipt-pdf";
 
 export const Route = createFileRoute("/receipting")({
-  head: () => ({ meta: [{ title: "Receipting — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Receipting — EduTech" },
+    { name: "description", content: "Record student payments and download school receipts in EduTech." },
+    { property: "og:title", content: "Receipting — EduTech" },
+    { property: "og:description", content: "Record student payments and download school receipts in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => <AppShell><ReceiptingPage /></AppShell>,
 });
 

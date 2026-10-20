@@ -11,7 +11,14 @@ import { kes } from "@/lib/money";
 import { Plus, Search, FileText } from "lucide-react";
 
 export const Route = createFileRoute("/students")({
-  head: () => ({ meta: [{ title: "Students — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Students — EduTech" },
+    { name: "description", content: "Manage student admission records, classes and balances in EduTech." },
+    { property: "og:title", content: "Students — EduTech" },
+    { property: "og:description", content: "Manage student admission records, classes and balances in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => (
     <AppShell>
       <StudentsPage />

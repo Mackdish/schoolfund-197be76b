@@ -5,7 +5,14 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Sign in — EduTech" },
+    { name: "description", content: "Sign in to EduTech to access your school treasury console." },
+    { property: "og:title", content: "Sign in — EduTech" },
+    { property: "og:description", content: "Sign in to EduTech to access your school treasury console." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   validateSearch: (s: Record<string, unknown>): { next?: string } => ({
     next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
   }),
