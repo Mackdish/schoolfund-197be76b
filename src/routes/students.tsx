@@ -11,7 +11,14 @@ import { kes } from "@/lib/money";
 import { Plus, Search, FileText } from "lucide-react";
 
 export const Route = createFileRoute("/students")({
-  head: () => ({ meta: [{ title: "Students — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Students — EduTech" },
+    { name: "description", content: "Manage student admission records, classes and balances in EduTech." },
+    { property: "og:title", content: "Students — EduTech" },
+    { property: "og:description", content: "Manage student admission records, classes and balances in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => (
     <AppShell>
       <StudentsPage />
@@ -178,7 +185,7 @@ function StudentsPage() {
       </Panel>
 
       <Sheet open={!!open} onOpenChange={(v) => !v && setOpen(null)}>
-        <SheetContent className="w-[480px] sm:max-w-[480px] overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-[480px] overflow-y-auto">
           <SheetHeader>
             <SheetTitle>{open === "new" ? "Add student" : "Edit student"}</SheetTitle>
           </SheetHeader>

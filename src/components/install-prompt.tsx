@@ -82,19 +82,19 @@ export function InstallPrompt() {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 w-[340px] rounded-lg border border-line bg-surface shadow-[0_10px_30px_-12px_rgba(0,0,0,0.35)] animate-in fade-in slide-in-from-bottom-3">
+    <div className="sf-install-prompt fixed inset-x-3 bottom-3 z-50 rounded-lg border border-line bg-surface shadow-lg animate-in fade-in slide-in-from-bottom-3 sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[340px]">
       <div className="flex items-start gap-3 p-4">
         <div className="sf-seal flex h-10 w-10 flex-none items-center justify-center">
           <span className="font-serif text-sm font-semibold text-brass">ET</span>
         </div>
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <div className="font-serif text-[15px] text-ink">Install EduTech</div>
           <p className="mt-1 text-[12px] leading-snug text-ink-soft">
             {iosHint
               ? "Tap the Share icon in Safari and choose “Add to Home Screen” to install EduTech as an app."
               : "Install EduTech on this device for one-tap access, full-screen mode, and a dedicated app icon."}
           </p>
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             {!iosHint && (
               <button
                 onClick={install}

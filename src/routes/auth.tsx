@@ -5,7 +5,14 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Sign in — EduTech" },
+    { name: "description", content: "Sign in to EduTech to access your school treasury console." },
+    { property: "og:title", content: "Sign in — EduTech" },
+    { property: "og:description", content: "Sign in to EduTech to access your school treasury console." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   validateSearch: (s: Record<string, unknown>): { next?: string } => ({
     next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
   }),
@@ -63,7 +70,7 @@ function AuthPage() {
 
 
   return (
-    <div className="min-h-screen bg-paper flex items-center justify-center px-4">
+    <div className="sf-auth min-h-dvh bg-paper flex items-center justify-center px-4 py-6">
       <div className="w-full max-w-[420px]">
         <div className="mb-7 flex items-center gap-3">
           <div className="sf-seal flex h-10 w-10 items-center justify-center">
@@ -75,7 +82,7 @@ function AuthPage() {
           </div>
         </div>
 
-        <div className="rounded-[10px] border border-line bg-surface px-7 py-6">
+        <div className="rounded-[10px] border border-line bg-surface px-4 py-6 sm:px-7">
           <h2 className="font-serif text-[19px]">
             {mode === "signin" ? "Sign in to your console" : "Create your bursar account"}
           </h2>

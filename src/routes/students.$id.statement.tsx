@@ -9,7 +9,14 @@ import { FileText, ArrowLeft } from "lucide-react";
 import { downloadStatementPdf, type StatementData } from "@/lib/statement-pdf";
 
 export const Route = createFileRoute("/students/$id/statement")({
-  head: () => ({ meta: [{ title: "Fee statement — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Fee statement — EduTech" },
+    { name: "description", content: "Review student charges, payments and balances in an EduTech fee statement." },
+    { property: "og:title", content: "Fee statement — EduTech" },
+    { property: "og:description", content: "Review student charges, payments and balances in an EduTech fee statement." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => <AppShell><StatementPage /></AppShell>,
 });
 

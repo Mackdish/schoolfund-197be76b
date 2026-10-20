@@ -12,7 +12,14 @@ import { downloadIpsasPdf, type IpsasPayload } from "@/lib/ipsas-pdf";
 import { downloadIpsasExcel } from "@/lib/ipsas-excel";
 
 export const Route = createFileRoute("/ipsas")({
-  head: () => ({ meta: [{ title: "IPSAS reports — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "IPSAS reports — EduTech" },
+    { name: "description", content: "Prepare annual school IPSAS financial reports in EduTech." },
+    { property: "og:title", content: "IPSAS reports — EduTech" },
+    { property: "og:description", content: "Prepare annual school IPSAS financial reports in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => <AppShell><IpsasPage /></AppShell>,
 });
 

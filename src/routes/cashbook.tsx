@@ -9,7 +9,14 @@ import { kes } from "@/lib/money";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/cashbook")({
-  head: () => ({ meta: [{ title: "Cashbook — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Cashbook — EduTech" },
+    { name: "description", content: "Review school receipts and payments by fund in the EduTech cashbook." },
+    { property: "og:title", content: "Cashbook — EduTech" },
+    { property: "og:description", content: "Review school receipts and payments by fund in the EduTech cashbook." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => (
     <AppShell>
       <CashbookPage />

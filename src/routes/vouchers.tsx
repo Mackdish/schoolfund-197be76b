@@ -11,7 +11,14 @@ import { kes } from "@/lib/money";
 import { Plus, CheckCircle2, FileText, Printer } from "lucide-react";
 
 export const Route = createFileRoute("/vouchers")({
-  head: () => ({ meta: [{ title: "Payment vouchers — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Payment vouchers — EduTech" },
+    { name: "description", content: "Prepare and approve school payment vouchers in EduTech." },
+    { property: "og:title", content: "Payment vouchers — EduTech" },
+    { property: "og:description", content: "Prepare and approve school payment vouchers in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => <AppShell><VouchersPage /></AppShell>,
 });
 

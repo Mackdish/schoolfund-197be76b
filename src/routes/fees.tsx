@@ -12,7 +12,14 @@ import { kes } from "@/lib/money";
 import { FileText, Wand2 } from "lucide-react";
 
 export const Route = createFileRoute("/fees")({
-  head: () => ({ meta: [{ title: "Fee collection — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Fee collection — EduTech" },
+    { name: "description", content: "Manage school fee structures, invoices and balances in EduTech." },
+    { property: "og:title", content: "Fee collection — EduTech" },
+    { property: "og:description", content: "Manage school fee structures, invoices and balances in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => <AppShell><FeesPage /></AppShell>,
 });
 

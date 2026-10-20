@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep compact-screen presentation in the shared shell, UI primitives, and screen-only CSS; financial tables scroll with all columns intact so printed templates remain unchanged.

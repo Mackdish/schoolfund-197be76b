@@ -10,7 +10,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, Trash2, CheckCircle2, Save, Upload, Image as ImageIcon } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Settings — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Settings — EduTech" },
+    { name: "description", content: "Manage school profile, receipt branding, terms, classes and access in EduTech." },
+    { property: "og:title", content: "Settings — EduTech" },
+    { property: "og:description", content: "Manage school profile, receipt branding, terms, classes and access in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => (
     <AppShell>
       <SettingsPage />

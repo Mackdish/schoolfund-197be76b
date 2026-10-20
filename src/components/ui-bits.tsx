@@ -13,11 +13,11 @@ export function Panel({
 }) {
   return (
     <div
-      className={`mb-[18px] rounded-[10px] border border-line bg-surface px-[22px] py-5 ${className}`}
+      className={`sf-panel mb-[18px] min-w-0 rounded-[10px] border border-line bg-surface px-3 py-4 sm:px-[22px] sm:py-5 ${className}`}
     >
       {title && (
-        <div className="mb-3.5 flex items-center justify-between">
-          <h3 className="text-[14.5px]">{title}</h3>
+        <div className="sf-panel-heading mb-3.5 flex flex-wrap items-center justify-between gap-2">
+          <h3 className="min-w-0 text-[14.5px]">{title}</h3>
           {right}
         </div>
       )}
@@ -38,8 +38,8 @@ export function PageHead({
   right?: ReactNode;
 }) {
   return (
-    <div className="mb-[22px] flex items-baseline justify-between">
-      <div>
+    <div className="sf-page-heading mb-[22px] flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between">
+      <div className="min-w-0">
         <span className="mb-1 block text-[10.5px] font-semibold uppercase tracking-[0.1em] text-brass">
           {eyebrow}
         </span>
@@ -96,11 +96,11 @@ export function KpiCard({
         ? "bg-amber-light text-amber"
         : "bg-teal-light text-teal";
   return (
-    <div className="rounded-[10px] border border-line bg-surface px-[18px] py-4 transition-colors hover:border-line-strong">
+    <div className="min-w-0 rounded-[10px] border border-line bg-surface px-3 py-4 transition-colors hover:border-line-strong sm:px-[18px]">
       <div className="text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink-soft">
         {label}
       </div>
-      <div className="my-2 font-mono text-[23px] font-medium">{value}</div>
+      <div className="my-2 break-words font-mono text-[20px] font-medium sm:text-[23px]">{value}</div>
       <div className="text-[11.5px] text-ink-soft">{sub}</div>
       {trend && (
         <div

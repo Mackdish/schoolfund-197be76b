@@ -10,7 +10,14 @@ import { toast } from "sonner";
 import { ArrowRight, CheckCircle2, GraduationCap, HandCoins, Wallet } from "lucide-react";
 
 export const Route = createFileRoute("/promotion")({
-  head: () => ({ meta: [{ title: "Promotion — EduTech" }] }),
+  head: () => ({ meta: [
+    { title: "Promotion — EduTech" },
+    { name: "description", content: "Manage student promotion and term balance carry-forward in EduTech." },
+    { property: "og:title", content: "Promotion — EduTech" },
+    { property: "og:description", content: "Manage student promotion and term balance carry-forward in EduTech." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" }
+  ] }),
   component: () => (
     <AppShell>
       <PromotionPage />
