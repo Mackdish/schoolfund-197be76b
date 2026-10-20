@@ -93,8 +93,8 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar: var(--ink);
+  --sidebar-foreground: #D9DFD9;
   --sidebar-primary: oklch(0.208 0.042 265.755);
   --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
   --sidebar-accent: oklch(0.968 0.007 247.896);
@@ -250,3 +250,66 @@
   line-height: 1.2;
 }
 .sf-input:focus { outline: 2px solid rgba(184,146,79,0.35); outline-offset: 1px; }
+
+/* Compact layouts retain every accounting column; only the table scrolls. */
+.sf-content :where(.grid, .flex, label, .overflow-x-auto, .overflow-auto) { min-width: 0; }
+.sf-content [role="tablist"] {
+  max-width: 100%;
+  overflow-x: auto;
+  justify-content: flex-start;
+}
+.sf-content [role="tab"] { flex-shrink: 0; }
+.sf-table-scroll { width: 100%; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; }
+.sf-mobile-nav { padding-bottom: env(safe-area-inset-bottom); }
+.sf-install-prompt { margin-bottom: env(safe-area-inset-bottom); }
+
+@media screen and (max-width: 767px) {
+  .sf-content .grid:is([class~="grid-cols-2"], [class~="grid-cols-3"], [class~="grid-cols-4"], [class~="grid-cols-5"], [class*="grid-cols-["]) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sf-content .grid > [class*="col-span-"] { grid-column: auto; }
+  .sf-content :where(.flex):has(> input, > select, > button, > a, > .relative, > .flex) {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+  .sf-content .sf-page-heading > :last-child,
+  .sf-content .sf-panel-heading > :last-child { max-width: 100%; }
+  .sf-content :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+  [role="dialog"] :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+  .sf-auth input, .sf-input {
+    min-width: 0;
+    max-width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .sf-content :where(button, a), [role="dialog"] button { min-height: 44px; }
+  .sf-content :where(button, a) { overflow-wrap: anywhere; }
+  .sf-content .font-mono:not(td):not(th) { overflow-wrap: anywhere; }
+  .sf-content table, [role="dialog"] table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    overscroll-behavior-x: contain;
+  }
+  .sf-content table :where(th, td), [role="dialog"] table :where(th, td) { min-width: 5rem; }
+  [role="dialog"] .grid:is([class~="grid-cols-2"], [class~="grid-cols-3"], [class~="grid-cols-4"], [class~="grid-cols-5"]) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  [role="dialog"] .grid > [class*="col-span-"] { grid-column: auto; }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+  .sf-content .grid:is([class~="grid-cols-4"], [class~="grid-cols-5"]) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sf-content .grid:is([class*="grid-cols-[1fr_"], [class*="grid-cols-[1.5fr_"]) { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media print {
+  .sf-app-shell { display: block !important; }
+  .sf-table-scroll { overflow: visible; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-fade { animation: none; }
+}

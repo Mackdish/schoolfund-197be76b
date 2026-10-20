@@ -178,7 +178,7 @@ function StudentsPage() {
       </Panel>
 
       <Sheet open={!!open} onOpenChange={(v) => !v && setOpen(null)}>
-        <SheetContent className="w-[480px] sm:max-w-[480px] overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-[480px] overflow-y-auto">
           <SheetHeader>
             <SheetTitle>{open === "new" ? "Add student" : "Edit student"}</SheetTitle>
           </SheetHeader>

@@ -261,7 +261,7 @@ function Dashboard() {
         sub={`${school?.name ?? ""} · live from the ledger`}
       />
 
-      <div className="mb-6 grid grid-cols-4 gap-4">
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
           label="Billed (term)"
           value={kes(totals.charges)}
@@ -292,7 +292,7 @@ function Dashboard() {
         />
       </div>
 
-      <div className="mb-[18px] grid grid-cols-3 gap-[18px]">
+      <div className="mb-[18px] grid grid-cols-1 gap-[18px] xl:grid-cols-3">
         {fundBalances.map((f) => (
           <div
             key={f.id}
@@ -321,7 +321,7 @@ function Dashboard() {
         )}
       </div>
 
-      <div className="grid grid-cols-[1.5fr_1fr] gap-[18px]">
+      <div className="grid grid-cols-1 gap-[18px] xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <Panel title="Collections — last 8 weeks (KES millions)">
           <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -424,7 +424,7 @@ function Dashboard() {
           </Link>
         }
       >
-        <table className="w-full text-[13px]">
+        <div className="sf-table-scroll"><table className="w-full text-[13px]">
           <thead>
             <tr className="border-b border-line">
               {["Student", "Class", "Term", "Outstanding", "Status"].map((h) => (
@@ -459,11 +459,11 @@ function Dashboard() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
       </Panel>
 
       <Panel title="Recent payments">
-        <table className="w-full text-[13px]">
+        <div className="sf-table-scroll"><table className="w-full text-[13px]">
           <thead>
             <tr className="border-b border-line">
               {["Student", "Date", "Amount", "Method", "Reference", "Status"].map((h) => (
@@ -499,7 +499,7 @@ function Dashboard() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
       </Panel>
     </>
   );

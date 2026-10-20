@@ -155,7 +155,7 @@ function ReceiptingPage() {
     <>
       <PageHead eyebrow="KCB · M-Pesa · cash" title="Receipting" sub="Confirm and post payments against student term invoices" />
 
-      <div className="grid grid-cols-[1fr_360px] gap-5">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
         <Panel title="Record payment">
           <div className="space-y-3">
             <L label="Student">
